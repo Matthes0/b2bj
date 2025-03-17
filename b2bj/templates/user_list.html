@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy</title>
+</head>
+<body>
+    <h1>Lista Uzytkownikow</h1>
+    <ul>
+        {% for uzytkownik in users %}
+            <li>{{ uzytkownik.nazwa_uzytkownika }} - {{ uzytkownik.email }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -21,11 +21,11 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('uzytkownicy/', views.uzytkownicy_list, name='uzytkownicy_list'),
-    path('gry/', views.gry_list, name='gry_list'),
-    path('zaklady/', views.zaklady_list, name='zaklady_list'),
-    path('transakcje/', views.transakcje_list, name='transakcje_list'),
-    path('bonusy/', views.bonusy_list, name='bonusy_list'),
-    path('statystyki/', views.statystyki_list, name='statystyki_list'),
+    path('uzytkownicy/', views.users_list, name='user_list'),
+    path('gry/', views.game_list, name='game_list'),
+    path('zaklady/', views.bet_list, name='bets_list'),
+    path('transakcje/', views.transaction_list, name='transaction_list'),
+    path('bonusy/', views.bonuses_list, name='bonuses_list'),
+    path('statystyki/', views.statistics_list, name='statistics_list'),
     path('display_data/', views.display_data, name='display_data'),
 ]

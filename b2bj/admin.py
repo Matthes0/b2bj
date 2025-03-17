@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Uzytkownicy, Gry, Zaklady, Transakcje, Bonusy, Statystyki
+from .models import User, Game, Bets, Transaction, Bonus, Statistics
 
-admin.site.register(Uzytkownicy)
-admin.site.register(Gry)
-admin.site.register(Zaklady)
-admin.site.register(Transakcje)
-admin.site.register(Bonusy)
-admin.site.register(Statystyki)
+admin.site.register(User)
+admin.site.register(Game)
+admin.site.register(Bets)
+admin.site.register(Transaction)
+admin.site.register(Bonus)
+admin.site.register(Statistics)
