@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bonusy</title>
+</head>
+<body>
+    <h1>Lista Bonusów</h1>
+    <ul>
+        {% for bonus in bonuses %}
+            <li>{{ bonus.user_id }} - {{ bonus.description }} - {{ bonus.date_awarded }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+</html>

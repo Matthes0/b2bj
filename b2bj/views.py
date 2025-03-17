@@ -1,36 +1,36 @@
 from django.shortcuts import render
-from .models import Uzytkownicy, Gry, Zaklady, Transakcje, Bonusy, Statystyki
+from .models import User, Game, Bets, Transaction, Bonus, Statistics
 
 def index(request):
     return render(request, 'index.html')
 
-def uzytkownicy_list(request):
-    uzytkownicy = Uzytkownicy.objects.all()
-    return render(request, 'uzytkownicy_list.html', {'uzytkownicy': uzytkownicy})
+def users_list(request):
+    users = User.objects.all()
+    return render(request, 'user_list.html', {'users': users})
 
-def gry_list(request):
-    gry = Gry.objects.all()
-    return render(request, 'gry_list.html', {'gry': gry})
+def game_list(request):
+    games = Game.objects.all()
+    return render(request, 'games_list.html', {'games': games})
 
-def zaklady_list(request):
-    zaklady = Zaklady.objects.all()
-    return render(request, 'zaklady_list.html', {'zaklady': zaklady})
+def bet_list(request):
+    bets = Bets.objects.all()
+    return render(request, 'bets_list.html', {'bets': bets})
 
-def transakcje_list(request):
-    transakcje = Transakcje.objects.all()
-    return render(request, 'transakcje_list.html', {'transakcje': transakcje})
+def transaction_list(request):
+    transactions = Transaction.objects.all()
+    return render(request, 'transaction_list.html', {'transactions': transactions})
 
-def bonusy_list(request):
-    bonusy = Bonusy.objects.all()
-    return render(request, 'bonusy_list.html', {'bonusy': bonusy})
+def bonuses_list(request):
+    bonuses = Bonus.objects.all()
+    return render(request, 'bonuses_list.html', {'bonuses': bonuses})
 
 def display_data(request):
-    users = Uzytkownicy.objects.all()
-    games = Gry.objects.all()
-    bets = Zaklady.objects.all()
-    transactions = Transakcje.objects.all()
-    bonuses = Bonusy.objects.all()
-    statistics = Statystyki.objects.all()
+    users = User.objects.all()
+    games = Game.objects.all()
+    bets = Bets.objects.all()
+    transactions = Transaction.objects.all()
+    bonuses = Bonus.objects.all()
+    statistics = Statistics.objects.all()
 
     context = {
         'users': users,
@@ -43,6 +43,6 @@ def display_data(request):
 
     return render(request, 'display_data.html', context)
 
-def statystyki_list(request):
-    statistics = Statystyki.objects.all()
-    return render(request, 'statystyki_list.html', {'statistics': statistics})
+def statistics_list(request):
+    statistics = Statistics.objects.all()
+    return render(request, 'statistics_list.html', {'statistics': statistics})
