@@ -22,4 +22,8 @@ app_name = 'games'
 
 urlpatterns = [
     path('', views.games_list, name='games_list'),
+    path('blackjack/', views.blackjack_game, name='blackjack'),
+    path('blackjack/hit/', views.hit, name='blackjack_hit'),
+    path('blackjack/stand/', views.stand, name='blackjack_stand'),
+    path('blackjack/reset/', views.reset_game, name='blackjack_reset'),
 ]

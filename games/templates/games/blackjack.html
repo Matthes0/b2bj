@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Blackjack{% endblock %}
+
+<style>
+    .card-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+</style>
+{% block content %}
+<div class="container text-center">
+    <h1>Blackjack</h1>
+
+    {% if message %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endif %}
+
+<div class="mb-4">
+    <h3>Your Hand ({{ player_value }})</h3>
+    <div class="card-row">
+        {% for image in player_images %}
+            <img src="{% static image %}" alt="Player card" class="card-img mx-2" style="height: 150px; object-fit: contain;">
+        {% endfor %}
+    </div>
+</div>
+
+<div class="mb-4">
+    <h3>Dealer's Hand ({{ dealer_value }})</h3>
+    <div class="card-row">
+        {% for image in dealer_images %}
+            <img src="{% static image %}" alt="Dealer card" class="card-img mx-2" style="height: 150px; object-fit: contain;">
+        {% endfor %}
+    </div>
+</div>
+
+    {% if not game_over %}
+        <a href="{% url 'games:blackjack_hit' %}" class="btn btn-success">Hit</a>
+        <a href="{% url 'games:blackjack_stand' %}" class="btn btn-warning">Stand</a>
+    {% else %}
+        <a href="{% url 'games:blackjack_reset' %}" class="btn btn-primary">Play Again</a>
+    {% endif %}
+</div>
+{% endblock %}
