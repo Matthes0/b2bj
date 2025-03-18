@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>List of Ganes</h1>
+    <ul>
+        {% for gra in games %}
+            <li>{{ gra.title }} - {{ gra.genre }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

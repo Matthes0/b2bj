@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Bonus List</h1>
+    <ul>
+        {% for bonus in bonuses %}
+            <li>{{ bonus.user_id }} - {{ bonus.description }} - {{ bonus.date_awarded }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

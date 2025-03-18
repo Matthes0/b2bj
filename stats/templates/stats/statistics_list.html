@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Statistics</h1>
+    <ul>
+        {% for stat in statistics %}
+            <li>{{ stat.user.name }} - Games Played: {{ stat.games_played }} - Games Won: {{ stat.games_won }} - Total Winnings: {{ stat.total_winnings }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
