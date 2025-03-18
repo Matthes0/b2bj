@@ -1,7 +1,11 @@
 # b2bj/management/commands/populate_db.py
+from django.core.management import BaseCommand
 
-from django.core.management.base import BaseCommand
-from b2bj.models import User, Game, Bets, Transaction, Bonus, Statistics
+from games.models import Game
+from user.models import User
+from bonuses.models import Bonus
+from payments.models import Payment
+from stats.models import Statistics
 
 class Command(BaseCommand):
     help = 'Populate the database with example data'
@@ -14,11 +18,9 @@ class Command(BaseCommand):
         game1 = Game.objects.create(title='Game One', genre='Action', release_date='2023-01-01')
         game2 = Game.objects.create(title='Game Two', genre='Adventure', release_date='2023-02-01')
 
-        Bets.objects.create(user=user1, game=game1, amount=50.00)
-        Bets.objects.create(user=user2, game=game2, amount=75.00)
 
-        Transaction.objects.create(user=user1, amount=100.00)
-        Transaction.objects.create(user=user2, amount=150.00)
+        Payment.objects.create(user=user1, amount=100.00)
+        Payment.objects.create(user=user2, amount=150.00)
 
         Bonus.objects.create(user=user1, description='Welcome Bonus')
         Bonus.objects.create(user=user2, description='Referral Bonus')
