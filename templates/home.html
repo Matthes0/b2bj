@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - My Django App{% endblock %}
+
+{% block content %}
+    <style>
+        .home-background {
+            background-image: url("{% static 'images/logo.png' %}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;  /* Adjust height to fill the screen */
+        }
+                .text-center {
+            text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+            font-weight: bold; /* Optional: Makes text more prominent */
+        }
+    </style>
+
+    <div class="home-background d-flex justify-content-center align-items-center">
+        <div class="text-center text-white">
+            <h1>Witaj na B2BJ</h1>
+            <p>99% Hazardzistów rezygnuje tuż przed wielką wygraną!</p>
+            <a>Nie bądź jednym z nich!</a>
+        </div>
+    </div>
+{% endblock %}
