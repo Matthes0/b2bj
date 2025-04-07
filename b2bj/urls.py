@@ -9,5 +9,4 @@ urlpatterns = [
     path('users/', include('user.urls', namespace='user')),
     path('bonuses/', include('bonuses.urls', namespace='bonuses')),
     path('payments/', include('payments.urls', namespace='payments')),
-    path('stats/', include('stats.urls', namespace='stats')),
 ]

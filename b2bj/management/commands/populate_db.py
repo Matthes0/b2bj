@@ -5,7 +5,6 @@ from games.models import Game
 from user.models import User
 from bonuses.models import Bonus
 from payments.models import Payment
-from stats.models import Statistics
 
 class Command(BaseCommand):
     help = 'Populate the database with example data'
@@ -25,7 +24,5 @@ class Command(BaseCommand):
         Bonus.objects.create(user=user1, description='Welcome Bonus')
         Bonus.objects.create(user=user2, description='Referral Bonus')
 
-        Statistics.objects.create(user=user1, games_played=10, games_won=5, total_winnings=200.00)
-        Statistics.objects.create(user=user2, games_played=15, games_won=7, total_winnings=300.00)
 
         self.stdout.write(self.style.SUCCESS('Successfully populated the database with example data'))

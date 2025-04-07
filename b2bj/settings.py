@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'games',
     'payments',
     'bonuses',
-    'stats'
 ]
 
 MIDDLEWARE = [
