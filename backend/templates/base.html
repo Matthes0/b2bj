@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Blik2BlackJack{% endblock %}</title>
+
+    <!-- Example: Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+        .banner {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 300px;  /* You can adjust the width to fit your image size */
+            height: auto;
+            z-index: 9999;  /* Ensures it stays on top of other elements */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="banner">
+        <img src="{% static 'images/banner.png' %}" alt="Special Offer Banner" class="img-fluid">
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 40px;">
+            </a>
+
+            <a class="navbar-brand" href="/">B2BJ</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'games:games_list' %}">Games</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'user:user_list' %}">User</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'bonuses:bonuses_list' %}">Bonuses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'payments:payments_list' %}">Payments</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Page content -->
+    <div class="container">
+        {% block content %}
+        <!-- Child templates inject here -->
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-4">
+        <div class="container text-center">
+            <p>&copy; 2025 B2BJ. All rights reserved.</p>
+        </div>
+    </footer>>
+</body>
+</html>

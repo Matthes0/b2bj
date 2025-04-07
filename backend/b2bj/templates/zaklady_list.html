@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zakłady</title>
+</head>
+<body>
+    <h1>Lista Zakładów</h1>
+    <ul>
+        {% for zaklad in zaklady %}
+            <li>{{ zaklad.user_id }} - {{ zaklad.game }} - {{ zaklad.amount}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

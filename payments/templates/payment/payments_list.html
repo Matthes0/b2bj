@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-{% block content %}
-    <h1>Payments List</h1>
-    <ul>
-        {% for p in payment %}
-            <li>{{ p.user_id }} - {{ p.amount }} - {{ p.date }}</li>
-        {% endfor %}
-    </ul>
-{% endblock %}

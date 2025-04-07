@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Display Data</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.name }} - {{ user.email }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Games</h1>
+    <ul>
+        {% for game in games %}
+            <li>{{ game.title }} - {{ game.genre }} - {{ game.release_date }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Bets</h1>
+    <ul>
+        {% for bet in bets %}
+            <li>{{ bet.user.name }} - {{ bet.game.title }} - {{ bet.amount }} - {{ bet.date }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Transactions</h1>
+    <ul>
+        {% for transaction in transactions %}
+            <li>{{ transaction.user.name }} - {{ transaction.amount }} - {{ transaction.date }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Bonuses</h1>
+    <ul>
+        {% for bonus in bonuses %}
+            <li>{{ bonus.user.name }} - {{ bonus.description }} - {{ bonus.date_awarded }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Statistics</h1>
+    <ul>
+        {% for stat in statistics %}
+            <li>{{ stat.user.name }} - Games Played: {{ stat.games_played }} - Games Won: {{ stat.games_won }} - Total Winnings: {{ stat.total_winnings }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
