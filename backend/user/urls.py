@@ -22,4 +22,5 @@ app_name = 'user'
 
 urlpatterns = [
     path('', views.users_list, name='user_list'),
+    path("register/", views.register_view, name='register_view'),
 ]
