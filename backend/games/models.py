@@ -20,11 +20,13 @@ class Bet(models.Model):
 class GameResult(models.Model):
     class Results(models.TextChoices):
         WIN = "WIN",
-        LOSE = "LOSE"
+        LOSE = "LOSE",
+        DRAW = "DRAW"
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    bet = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True)
     result = models.CharField(choices=Results.choices, max_length=5)
+    payout= models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
         return f"{self.user.username} bet on {self.game.title}"
