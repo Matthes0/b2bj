@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from games.models import Bet
@@ -6,16 +7,18 @@ from django.shortcuts import render, redirect
 from . import utils
 
 # Create your views here.
+@login_required
 def games_list(request):
     games = Game.objects.all()
     return render(request, 'games/games_list.html', {'games': games})
 
+@login_required
 def bet_list(request):
     bets = Bet.objects.all()
     return render(request, 'games/bets_list.html', {'bets': bets})
 
 
-
+@login_required
 def blackjack_game(request):
     if 'deck' not in request.session:
         # Start a new game
