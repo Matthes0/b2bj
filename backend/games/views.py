@@ -22,11 +22,19 @@ class BetListAPI(generics.ListCreateAPIView):
     queryset = Bet.objects.all()
     serializer_class = BetSerializer
 
-class GameResultAPI(APIView):
-    def get(self, request):
-        results = GameResult.objects.all()
-        serializer = GameResultSerializer(results, many=True)
-        return Response(serializer.data)
+# class GameResultAPI(APIView):
+#     def get(self, request):
+#         results = GameResult.objects.all()
+#         serializer = GameResultSerializer(results, many=True)
+#         return Response(serializer.data)
+
+from rest_framework import generics
+from .models import GameResult
+from .serializers import GameResultSerializer
+
+class GameResultAPI(generics.ListCreateAPIView):
+    queryset = GameResult.objects.all()
+    serializer_class = GameResultSerializer
 
 
 
