@@ -1,3 +1,36 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import GameSerializer, BetSerializer, GameResultSerializer
+from .models import Game, Bet, GameResult
+
+
+class GameListAPI(APIView):
+    def get(self, request):
+        games = Game.objects.all()
+        serializer = GameSerializer(games, many=True)
+        return Response(serializer.data)
+
+# class BetListAPI(APIView):
+#     def get(self, request):
+#         bets = Bet.objects.all()
+#         serializer = BetSerializer(bets, many=True)
+#         return Response(serializer.data)
+
+from rest_framework import generics  # upewnij się, że jest ten import
+
+class BetListAPI(generics.ListCreateAPIView):
+    queryset = Bet.objects.all()
+    serializer_class = BetSerializer
+
+class GameResultAPI(APIView):
+    def get(self, request):
+        results = GameResult.objects.all()
+        serializer = GameResultSerializer(results, many=True)
+        return Response(serializer.data)
+
+
+
+
 from django.shortcuts import render
 
 from games.models import Bet

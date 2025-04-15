@@ -14,16 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
 from . import views
+from .views import GameListAPI, BetListAPI, GameResultAPI  # ← IMPORT API widoków
 
 app_name = 'games'
 
 urlpatterns = [
+    # Widoki HTML
     path('', views.games_list, name='games_list'),
     path('blackjack/', views.blackjack_game, name='blackjack'),
     path('blackjack/hit/', views.hit, name='blackjack_hit'),
     path('blackjack/stand/', views.stand, name='blackjack_stand'),
     path('blackjack/reset/', views.reset_game, name='blackjack_reset'),
+
+    # REST API endpointy dla Reacta
+path('games/', GameListAPI.as_view(), name='api_games'),
+path('bets/', BetListAPI.as_view(), name='api_bets'),
+path('results/', GameResultAPI.as_view(), name='api_results'),
+
 ]
