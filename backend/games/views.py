@@ -5,8 +5,8 @@ from .models import Game, Bet, GameResult
 from rest_framework import generics  # upewnij się, że jest ten import
 from .models import GameResult
 from .serializers import GameResultSerializer
-from backend.games.models import Bet
-from backend.games.models import Game
+from games.models import Bet
+from games.models import Game
 from django.shortcuts import render, redirect
 from . import utils
 from django.shortcuts import render
