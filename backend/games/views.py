@@ -1,3 +1,48 @@
+<<<<<<< HEAD
+from django.contrib.auth.decorators import login_required
+=======
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import GameSerializer, BetSerializer, GameResultSerializer
+from .models import Game, Bet, GameResult
+
+
+class GameListAPI(APIView):
+    def get(self, request):
+        games = Game.objects.all()
+        serializer = GameSerializer(games, many=True)
+        return Response(serializer.data)
+
+# class BetListAPI(APIView):
+#     def get(self, request):
+#         bets = Bet.objects.all()
+#         serializer = BetSerializer(bets, many=True)
+#         return Response(serializer.data)
+
+from rest_framework import generics  # upewnij się, że jest ten import
+
+class BetListAPI(generics.ListCreateAPIView):
+    queryset = Bet.objects.all()
+    serializer_class = BetSerializer
+
+# class GameResultAPI(APIView):
+#     def get(self, request):
+#         results = GameResult.objects.all()
+#         serializer = GameResultSerializer(results, many=True)
+#         return Response(serializer.data)
+
+from rest_framework import generics
+from .models import GameResult
+from .serializers import GameResultSerializer
+
+class GameResultAPI(generics.ListCreateAPIView):
+    queryset = GameResult.objects.all()
+    serializer_class = GameResultSerializer
+
+
+
+
+>>>>>>> f45f28d (Moje lokalne zmiany przed rebase)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import GameSerializer, BetSerializer, GameResultSerializer
@@ -47,16 +92,18 @@ from django.shortcuts import render, redirect
 from . import utils
 
 # Create your views here.
+@login_required
 def games_list(request):
     games = Game.objects.all()
     return render(request, 'games/games_list.html', {'games': games})
 
+@login_required
 def bet_list(request):
     bets = Bet.objects.all()
     return render(request, 'games/bets_list.html', {'bets': bets})
 
 
-
+@login_required
 def blackjack_game(request):
     if 'deck' not in request.session:
         # Start a new game
