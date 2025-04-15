@@ -2,7 +2,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import GameSerializer, BetSerializer, GameResultSerializer
 from .models import Game, Bet, GameResult
+from rest_framework import generics  # upewnij się, że jest ten import
+from .models import GameResult
+from .serializers import GameResultSerializer
+from backend.games.models import Bet
+from backend.games.models import Game
+from django.shortcuts import render, redirect
+from . import utils
+from django.shortcuts import render
 
+
+
+from django.contrib.auth.decorators import login_required
 
 class GameListAPI(APIView):
     def get(self, request):
@@ -16,7 +27,7 @@ class GameListAPI(APIView):
 #         serializer = BetSerializer(bets, many=True)
 #         return Response(serializer.data)
 
-from rest_framework import generics  # upewnij się, że jest ten import
+
 
 class BetListAPI(generics.ListCreateAPIView):
     queryset = Bet.objects.all()
@@ -28,9 +39,7 @@ class BetListAPI(generics.ListCreateAPIView):
 #         serializer = GameResultSerializer(results, many=True)
 #         return Response(serializer.data)
 
-from rest_framework import generics
-from .models import GameResult
-from .serializers import GameResultSerializer
+
 
 class GameResultAPI(generics.ListCreateAPIView):
     queryset = GameResult.objects.all()
@@ -39,14 +48,7 @@ class GameResultAPI(generics.ListCreateAPIView):
 
 
 
-from django.shortcuts import render
 
-from games.models import Bet
-from games.models import Game
-from django.shortcuts import render, redirect
-from . import utils
-
-from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 @login_required
