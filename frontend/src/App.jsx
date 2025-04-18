@@ -4,7 +4,9 @@ import Home from './Home';
 import About from './About';
 import Contact from './Contact';
 import AnimatedCard from './AnimatedCard';
-import './index.css'; // Importuj plik CSS
+import UserPage from './UserPage';
+import './index.css';
+import LoginPage from "./LoginPage.jsx"; // Importuj plik CSS
 
 const App = () => {
   const [balance, setBalance] = useState(1000); // Inicjalizacja na 1000
@@ -48,6 +50,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/user" element={<UserPage />} />
         <Route path="/bj" element={<AnimatedCard balance={balance} setBalance={setBalance} />} />
       </Routes>
       <footer>

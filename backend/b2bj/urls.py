@@ -11,6 +11,8 @@ urlpatterns = [
     path('games/', include('games.urls', namespace='games')),  # stare HTML widoki
     path('api/', include('games.api_urls')),  # nowe REST API
     path('users/', include('user.urls', namespace='user')),
+    path('users/api/', include('user.api_urls')),
+
     path('bonuses/', include('bonuses.urls', namespace='bonuses')),
     path('payments/', include('payments.urls', namespace='payments')),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
