@@ -91,7 +91,6 @@
 // export default App;
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Home';
 import About from './About';
 import Contact from './Contact';
 import AnimatedCard from './AnimatedCard';
@@ -99,7 +98,7 @@ import UserPage from './UserPage';
 import LoginPage from './LoginPage';
 import './index.css';
 
-
+import { Home } from './components/Home/Home';
 import { Header } from './components/Header/Header';
 import { Panel } from './components/Panel/Panel';
 import { NavigationPanel } from './components/NavigationPanel/NavigationPanel';
