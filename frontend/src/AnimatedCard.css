@@ -155,11 +155,13 @@
 }
 
 .player-hand {
+  
   margin-bottom: 40px;
 }
 
 .hand h2 {
   color: white;
+  margin-bottom: 70px; 
 }
 
 .card {
