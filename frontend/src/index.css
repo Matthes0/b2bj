@@ -38,24 +38,33 @@ header {
 }
 
 .header-content {
-  display: flex; /* Dodaj flexbox */
-  align-items: center; /* Wyśrodkuj w pionie */
-  justify-content: space-between; /* Rozłóż elementy równomiernie */
-  background-color: #213241;
-  border-radius: 8px;
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  width: 150px;
-  height: 50px;
+  padding: 10px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 
-body {
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  padding-top: 80px; /* Add this line */
+  overflow-x: hidden;
 }
+
+body {
+  padding-top: 80px;
+}
+
 
 h1 {
   font-size: 3.2em;
@@ -129,9 +138,9 @@ button:focus-visible {
 }
 
 .panel {
-  width: 200px; /* Adjust the size as needed */
-  height: 200px; /* Adjust the size as needed */
-  background-color: #213241;
+  width: 90%; 
+  max-width: 300px; 
+  height: 200px;
   color: white;
   display: flex;
   align-items: center;
@@ -154,9 +163,12 @@ footer {
 .footer-content {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap; /* ✅ pozwala łamać się wierszom przy małej szerokości */
   width: 100%;
-  max-width: 1200px; /* Optional: Set a max width for the footer content */
+  max-width: 1200px;
+  margin: 0 auto;
 }
+
 
 .footer-column {
   flex: 1;

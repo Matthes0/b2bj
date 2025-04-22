@@ -108,18 +108,16 @@ function App() {
   const [balance, setBalance] = useState(1000);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  function togglePanel() {
-    setIsPanelOpen(!isPanelOpen);
-  }
-
-  function closePanel() {
-    setIsPanelOpen(false);
-  }
+  const togglePanel = () => setIsPanelOpen(prev => !prev);
+  const closePanel = () => setIsPanelOpen(false);
 
   return (
     <Router>
-      <Header balance={balance} togglePanel={togglePanel} />
-      <Panel isPanelOpen={isPanelOpen} closePanel={closePanel} />
+       <Header balance={balance} togglePanel={togglePanel} />
+      <Panel
+        isPanelOpen={isPanelOpen}
+        closePanel={closePanel}
+      />
       <NavigationPanel />
       <Routes>
         <Route path="/" element={<Home />} />
