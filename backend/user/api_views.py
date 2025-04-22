@@ -8,6 +8,10 @@ import json
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ApiLoginView(View):
+
+    def get(self, request):
+        return JsonResponse({"csrf": "ok"})
+
     def post(self, request):
         try:
             data = json.loads(request.body)

@@ -1,0 +1,19 @@
+.logo-container {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .casino-logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #facc15;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+  }
+  
+  .casino-logo-text:hover {
+    transform: scale(1.05);
+  }
+  

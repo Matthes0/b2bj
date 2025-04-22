@@ -1,0 +1,26 @@
+.user-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  
+  .user-panel:hover {
+    background-color: #0f1f2f;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .username {
+    font-weight: 500;
+    color: white;
+    font-size: 14px;
+  }
+  
