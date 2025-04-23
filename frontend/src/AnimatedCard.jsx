@@ -562,7 +562,7 @@ return (
                   initial={{ opacity: 0, y: -100 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: cardIndex * 0.1 }}
-                  style={{ left: `calc(40% + ${cardIndex * 80}px)`, transform: 'translate(-50%, -50%)' }}
+                  style={{ top: '50px',left: `calc(40% + ${cardIndex * 80}px)`, transform: 'translate(-50%, -50%)' }}
                 >
                   <img src={card.image} alt="Card" />
                 </motion.div>
