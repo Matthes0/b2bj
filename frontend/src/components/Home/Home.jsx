@@ -18,8 +18,17 @@ export function Home() {
       <h1 className="home-title">Lista Gier z Django API</h1>
 
       <div className="featured-game">
-        <Link to="/bj" className="blackjack-link">🎰 Zagraj w Blackjack</Link>
-      </div>
+  <Link to="/bj" className="featured-link">
+    <span className="game-icon">🎰</span> <span className="game-text">Zagraj w Blackjack</span>
+  </Link>
+</div>
+
+<div className="featured-game">
+  <Link to="/mines" className="featured-link">
+    <span className="game-icon">💣</span> <span className="game-text">Zagraj w Mines</span>
+  </Link>
+</div>
+
 
       <GameList games={games} />
     </div>

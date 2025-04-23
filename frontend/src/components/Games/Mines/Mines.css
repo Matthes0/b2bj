@@ -1,0 +1,159 @@
+.mines-sidebar {
+    background: linear-gradient(145deg, #1f2c3b, #0e1a27);
+    padding: 25px;
+    border-radius: 15px;
+    color: #ffffff;
+    width: 250px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  }
+  
+  .mines-sidebar h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+    font-size: 16px;
+  }
+  
+  .stat input {
+    width: 70px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #324a60;
+    color: #fff;
+    text-align: center;
+  }
+  
+  /* button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  button:not(:disabled) {
+    background-color: #1abc9c;
+    color: #fff;
+  } */
+  
+  .mines-sidebar button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+  
+  .mines-sidebar button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .mines-sidebar button:not(:disabled) {
+    background-color: #1abc9c;
+    color: #fff;
+  }
+  
+
+  .cashout-button {
+    background: #f1c40f;
+    color: black;
+  }
+  
+  .reset-button {
+    background: #3498db;
+    color: white;
+    margin-top: 10px;
+  }
+  
+  .loss-message {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #ff4d4d;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .mines-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+    gap: 40px;
+  }
+  
+  .mines-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #3498db;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .tile:hover {
+    transform: scale(1.1);
+  }
+  
+  .tile img {
+    max-width: 70%;
+    height: auto;
+  }
+
+  .tile.mine-hit {
+    background-color: #e74c3c !important;
+  }
+  
+  .tile.diamond,
+.tile.mine {
+  animation: reveal-wave 0.3s ease-out;
+}
+
+@keyframes reveal-wave {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

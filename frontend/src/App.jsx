@@ -103,6 +103,8 @@ import { Header } from './components/Header/Header';
 import { Panel } from './components/Panel/Panel';
 import { NavigationPanel } from './components/NavigationPanel/NavigationPanel';
 import { Footer } from './components/Footer/Footer/Footer';
+import { Mines } from './components/Games/Mines/Mines';
+
 
 function App() {
   const [balance, setBalance] = useState(1000);
@@ -126,6 +128,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/bj" element={<AnimatedCard balance={balance} setBalance={setBalance} />} />
+        <Route path="/mines" element={<Mines balance={balance} setBalance={setBalance} />} />
       </Routes>
       <Footer />
     </Router>
