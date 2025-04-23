@@ -155,13 +155,12 @@
 }
 
 .player-hand {
-  
   margin-bottom: 40px;
 }
 
 .hand h2 {
   color: white;
-  margin-bottom: 70px; 
+  margin-bottom: 70px;
 }
 
 .card {
@@ -171,4 +170,18 @@
 .card img {
   width: 100px;
   height: auto;
+}
+
+.split-hand {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.active-hand {
+  border: 2px solid yellow;
+  border-radius: 12px;
+  padding: 10px;
+  background-color: rgba(255, 255, 0, 0.1);
 }

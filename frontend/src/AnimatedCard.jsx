@@ -122,6 +122,10 @@ const AnimatedCard = ({ balance, setBalance }) => {
   const [gamePhase, setGamePhase] = useState('betting');
   const [isSecondDealerCardHidden, setIsSecondDealerCardHidden] = useState(true);
   const [isDealerCardFlipping, setIsDealerCardFlipping] = useState(false);
+  const [splitHands, setSplitHands] = useState([]); // np. [[hand1], [hand2]]
+  const [splitScores, setSplitScores] = useState([]);
+  const [isSplit, setIsSplit] = useState(false);
+  const [activeSplitIndex, setActiveSplitIndex] = useState(0);
 
   const dealerTimeoutRef = useRef(null);
 
@@ -134,368 +138,298 @@ const AnimatedCard = ({ balance, setBalance }) => {
     setBetAmount(prev => Math.max(0, Math.floor(prev * multiplier)));
   };
 
-  // const startGame = async () => {
-  //   if (betAmount <= 0 || betAmount > balance) return;
-    
-  //   setBalance(prev => prev - betAmount);
-  //   setGameStatus('playing');
-  //   setGamePhase('initial');
-  //   setPlayerHand([]);
-  //   setDealerHand([]);
-  //   setPlayerScore(0);
-  //   setDealerScore(0);
-  //   setIsSecondDealerCardHidden(true);
-
-  //   await new Promise(resolve => setTimeout(resolve, 300));
-  //   const dealDelay = 500;
-
-  //   await dealCard(setPlayerHand, setPlayerScore);
-  //   await new Promise(resolve => setTimeout(resolve, dealDelay));
-  //   await dealCard(setDealerHand, setDealerScore);
-  //   await new Promise(resolve => setTimeout(resolve, dealDelay));
-  //   await dealCard(setPlayerHand, setPlayerScore);
-  //   await new Promise(resolve => setTimeout(resolve, dealDelay));
-  //   await dealCard(setDealerHand, setDealerScore);
-
-  //   setGamePhase('player-turn');
-  // };
-
-
   const startGame = async () => {
-    if (betAmount <= 0 || betAmount > balance) return;
-  
-    // Wysyłamy zakład do API
-    try {
-      const res = await axios.post('http://localhost:8000/api/bets/', {
-        game: 1,       // ID gry (Blackjack)
-        user: 1,       // Tymczasowo zakładamy ID użytkownika 1
-        amount: betAmount,
-        rate: 2.0      // Możesz później wyliczać dynamicznie
-      });
-  
-      console.log('Zakład zapisany w Django:', res.data);
-    } catch (err) {
-      console.error('Błąd przy zapisie zakładu:', err);
+  if (betAmount <= 0 || betAmount > balance) return;
+
+  try {
+    const res = await axios.post('http://localhost:8000/api/bets/', {
+      game: 1,
+      user: 1,
+      amount: betAmount,
+      rate: 2.0
+    });
+    console.log('Zakład zapisany w Django:', res.data);
+  } catch (err) {
+    console.error('Błąd przy zapisie zakładu:', err);
+    return;
+  }
+
+  // Reset all game state including split
+  setBalance(prev => prev - betAmount);
+  setGameStatus('playing');
+  setGamePhase('initial');
+  setPlayerHand([]);
+  setDealerHand([]);
+  setPlayerScore(0);
+  setDealerScore(0);
+  setIsSecondDealerCardHidden(true);
+  setSplitHands([]);
+  setSplitScores([]);
+  setIsSplit(false);
+  setActiveSplitIndex(0);
+
+  await new Promise(resolve => setTimeout(resolve, 300));
+  const dealDelay = 500;
+
+  await dealCard(setPlayerHand, setPlayerScore);
+  await new Promise(resolve => setTimeout(resolve, dealDelay));
+  await dealCard(setDealerHand, setDealerScore);
+  await new Promise(resolve => setTimeout(resolve, dealDelay));
+  await dealCard(setPlayerHand, setPlayerScore);
+  await new Promise(resolve => setTimeout(resolve, dealDelay));
+  await dealCard(setDealerHand, setDealerScore);
+
+  setGamePhase('player-turn');
+};
+
+ const dealCard = (handSetter, scoreSetter, afterDrawCallback, isSplitDeal = false) => {
+  return new Promise((resolve) => {
+    if (remainingCards.length === 0) {
+      console.warn('No cards left in deck!');
+      resolve(null);
       return;
     }
-  
-    setBalance(prev => prev - betAmount);
-    setGameStatus('playing');
-    setGamePhase('initial');
-    setPlayerHand([]);
-    setDealerHand([]);
-    setPlayerScore(0);
-    setDealerScore(0);
-    setIsSecondDealerCardHidden(true);
-  
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const dealDelay = 500;
-  
-    await dealCard(setPlayerHand, setPlayerScore);
-    await new Promise(resolve => setTimeout(resolve, dealDelay));
-    await dealCard(setDealerHand, setDealerScore);
-    await new Promise(resolve => setTimeout(resolve, dealDelay));
-    await dealCard(setPlayerHand, setPlayerScore);
-    await new Promise(resolve => setTimeout(resolve, dealDelay));
-    await dealCard(setDealerHand, setDealerScore);
-  
-    setGamePhase('player-turn');
-  };
-  
 
-  const dealCard = (handSetter, scoreSetter, afterDrawCallback) => {
-    return new Promise((resolve) => {
-      if (remainingCards.length === 0) {
-        console.warn('No cards left in deck!');
-        resolve(false);
-        return;
-      }
+    const randomIndex = Math.floor(Math.random() * remainingCards.length);
+    const selectedImage = remainingCards[randomIndex];
 
-      const randomIndex = Math.floor(Math.random() * remainingCards.length);
-      const selectedImage = remainingCards[randomIndex];
+    setRemainingCards(prev => prev.filter((_, index) => index !== randomIndex));
 
-      setRemainingCards(prev => prev.filter((_, index) => index !== randomIndex));
+    const newCard = { id: Date.now(), image: selectedImage };
 
+    if (isSplitDeal) {
+      resolve(newCard);
+      return;
+    }
+
+    if (typeof handSetter === 'function') {
       handSetter(prevHand => {
-        const newHand = [...prevHand, { id: Date.now(), image: selectedImage }];
+        const newHand = [...prevHand, newCard];
         const newScore = calculateHandValue(newHand);
-        scoreSetter(newScore);
 
-        if (afterDrawCallback) {
-          afterDrawCallback(newHand, newScore);
+        if (scoreSetter) {
+          scoreSetter(newScore);
         }
+
+        if (afterDrawCallback) afterDrawCallback(newHand, newScore);
 
         resolve(true);
         return newHand;
       });
-    });
-  };
+    } else {
+      resolve(newCard);
+    }
+  });
+};
 
-  const handleHit = () => {
-    if (gamePhase !== 'player-turn') return;
-  
-    dealCard(setPlayerHand, setPlayerScore, (newHand, newScore) => {
-      if (newScore > 21) {
-        endGame('LOSE');
+const handleHit = async () => {
+  if (gamePhase !== 'player-turn') return;
+
+  if (isSplit) {
+    const newCard = await dealCard(null, null, null, true);
+
+    // Use functional updates to get the latest state
+    setSplitHands(prevHands => {
+      const updatedHands = [...prevHands];
+      updatedHands[activeSplitIndex] = [...updatedHands[activeSplitIndex], newCard];
+
+      // Update score based on the updated hand
+      setSplitScores(prevScores => {
+        const newScores = [...prevScores];
+        newScores[activeSplitIndex] = calculateHandValue(updatedHands[activeSplitIndex]);
+        return newScores;
+      });
+
+      // Check if current hand is busted
+      if (calculateHandValue(updatedHands[activeSplitIndex]) > 21) {
+        if (activeSplitIndex < prevHands.length - 1) {
+          setActiveSplitIndex(activeSplitIndex + 1); // Move to next hand
+        } else {
+          setTimeout(() => handleStand(), 500); // Small delay before stand
+        }
       }
+
+      return updatedHands;
     });
-  };
+  } else {
+    await dealCard(setPlayerHand, setPlayerScore, (newHand, newScore) => {
+      if (newScore > 21) endGame('LOSE');
+    });
+  }
+};
 
-  // const handleStand = () => {
-  //   if (gamePhase !== 'player-turn') return;
-  
-  //   setIsSecondDealerCardHidden(false);
-  //   setGamePhase('dealer-turn');
-  
-  //   const dealerValue = calculateHandValue(dealerHand);
-  //   if (dealerValue >= 17 && dealerHand.length < 5) {
-  //     endGame();
-  //   } else {
-  //     startDealerDrawing();
-  //   }
-  // };
 
-  // const handleStand = async () => {
-  //   if (gamePhase !== 'player-turn') return;
-  
-  //   setIsSecondDealerCardHidden(false);
-  //   setGamePhase('dealer-turn');
-  
-  //   // Dociągaj karty do min. 17
-  //   let dealerVal = calculateHandValue(dealerHand);
-  //   while (dealerVal < 17 && dealerHand.length < 5) {
-  //     await drawDealerCards();
-  //     dealerVal = calculateHandValue(dealerHand);
-  //   }
-  
-  //   endGame();  // teraz mamy pewny stan
-  // };
-  
-
-  // const handleStand = async () => {
-  //   if (gamePhase !== 'player-turn') return;
-  
-  //   setIsSecondDealerCardHidden(false);
-  //   setGamePhase('dealer-turn');
-  
-  //   let dealerVal = calculateHandValue(dealerHand);
-  
-  //   while (dealerVal < 17 && dealerVal <= 21 && dealerHand.length < 5) {
-  //     await drawDealerCards();
-  //     dealerVal = calculateHandValue(dealerHand);
-  //   }
-  
-  //   endGame();
-  // };
-  
-  
   useEffect(() => {
     const dealerValue = calculateHandValue(dealerHand);
-  
     if (gamePhase === 'dealer-turn' && !isDealerDrawing) {
       if (dealerValue >= 17 || dealerValue > 21 || dealerHand.length >= 5) {
-        endGame(); // kończymy grę
+        endGame();
       } else {
-        startDealerDrawing(); // dobieramy kolejną kartę
+        startDealerDrawing();
       }
     }
   }, [dealerHand, gamePhase, isDealerDrawing]);
-  
 
-  const handleStand = () => {
-    if (gamePhase !== 'player-turn') return;
-  
+const handleStand = () => {
+  if (isSplit) {
+    if (activeSplitIndex < splitHands.length - 1) {
+      setActiveSplitIndex(activeSplitIndex + 1); // Move to next hand
+    } else {
+      // All hands finished, now dealer's turn
+      setIsSecondDealerCardHidden(false);
+      setGamePhase('dealer-turn');
+    }
+  } else {
     setIsSecondDealerCardHidden(false);
-    setGamePhase('dealer-turn'); // Resztą zajmie się useEffect
-  };
-  
+    setGamePhase('dealer-turn');
+  }
+};
 
   const handleDouble = () => {
     if (gamePhase !== 'player-turn' || playerHand.length !== 2) return;
-    
     if (betAmount <= balance) {
       setBalance(prev => prev - betAmount);
       setBetAmount(prev => prev * 2);
-      
-      dealCard(setPlayerHand, setPlayerScore, () => {
-        handleStand();
-      });
+      dealCard(setPlayerHand, setPlayerScore, () => handleStand());
     }
   };
 
-  const handleSplit = () => {
-    console.log("Split not implemented yet");
-  };
+const handleSplit = async () => {
+  if (playerHand.length === 2 &&
+      getCardValue(playerHand[0].image) === getCardValue(playerHand[1].image)) {
+    // Create two new hands from the initial cards
+    const hand1 = [{ ...playerHand[0], id: Date.now() }];
+    const hand2 = [{ ...playerHand[1], id: Date.now() + 1 }];
+
+    setSplitHands([hand1, hand2]);
+    setSplitScores([
+      getCardValue(hand1[0].image),
+      getCardValue(hand2[0].image)
+    ]);
+    setIsSplit(true);
+    setActiveSplitIndex(0);
+    setPlayerHand([]);
+
+    // Deal a card to each split hand with proper state updates
+    const card1 = await dealCard(null, null, null, true);
+    const card2 = await dealCard(null, null, null, true);
+
+    setSplitHands(prev => [
+      [...prev[0], card1],
+      [...prev[1], card2]
+    ]);
+
+    setSplitScores([
+      calculateHandValue([...hand1, card1]),
+      calculateHandValue([...hand2, card2])
+    ]);
+  }
+};
+
+
 
   const startDealerDrawing = () => {
     setIsDealerDrawing(true);
     drawDealerCards();
   };
 
-  // const drawDealerCards = async () => {
-  //   setIsDealerDrawing(true);
-  //   if (isSecondDealerCardHidden) {
-  //     setIsDealerCardFlipping(true);
-  //     await new Promise(resolve => setTimeout(resolve, 800));
-  //     setIsSecondDealerCardHidden(false);
-  //     setIsDealerCardFlipping(false);
-  //   }
-  //   await dealCard(setDealerHand, setDealerScore);
-  //   setIsDealerDrawing(false);
-  // };
-
   const drawDealerCards = () => {
     return new Promise(async (resolve) => {
       setIsDealerDrawing(true);
-  
       if (isSecondDealerCardHidden) {
         setIsDealerCardFlipping(true);
         await new Promise(res => setTimeout(res, 800));
         setIsSecondDealerCardHidden(false);
         setIsDealerCardFlipping(false);
       }
-  
       await dealCard(setDealerHand, setDealerScore);
       setIsDealerDrawing(false);
       resolve();
     });
   };
-  
 
-  // useEffect(() => {
-  //   if (gamePhase === 'dealer-turn' && !isDealerDrawing) {
-  //     const value = calculateHandValue(dealerHand);
-  //     if (value >= 17 || value > 21 || dealerHand.length >= 5) {
-  //       endGame();
-  //     } else {
-  //       startDealerDrawing();
-  //     }
-  //   }
-  // }, [dealerHand, gamePhase, isDealerDrawing]);
-
-  // const endGame = (forcedResult = null) => {
-  //   setIsDealerDrawing(false);
-    
-  //   setTimeout(() => {
-  //     let result = forcedResult;
-  //     if (!forcedResult) {
-  //       const playerValue = calculateHandValue(playerHand);
-  //       const dealerValue = calculateHandValue(dealerHand);
-        
-  //       if (playerValue > 21) {
-  //         result = 'lost';
-  //       } else if (dealerValue > 21) {
-  //         result = 'won';
-  //       } else if (playerValue > dealerValue) {
-  //         result = 'won';
-  //       } else if (playerValue < dealerValue) {
-  //         result = 'lost';
-  //       } else {
-  //         result = 'tie';
-  //       }
-  //     }
-
-  //     if (result === 'won') {
-  //       setBalance(prev => prev + betAmount * 2);
-  //     } else if (result === 'tie') {
-  //       setBalance(prev => prev + betAmount);
-  //     }
-
-  //     setGameStatus(result);
-  //     setGamePhase('game-over');
-  //   }, 100);
-  // };
-
-  // const endGame = (forcedResult = null) => {
-  //   setIsDealerDrawing(false);
-  
-  //   setTimeout(async () => {
-  //     let result = forcedResult;
-  //     const playerValue = calculateHandValue(playerHand);
-  //     const dealerValue = calculateHandValue(dealerHand);
-  
-  //     if (!forcedResult) {
-  //       if (playerValue > 21) result = 'LOSE';
-  //       else if (dealerValue > 21) result = 'WIN';
-  //       else if (playerValue > dealerValue) result = 'WIN';
-  //       else if (playerValue < dealerValue) result = 'LOSE';
-  //       else result = 'DRAW';
-  //     }
-  
-  //     // Oblicz payout
-  //     let payout = 0;
-  //     if (result === 'WIN') payout = betAmount * 2;
-  //     else if (result === 'DRAW') payout = betAmount;
-  
-  //     // Zapisz wynik do API Django
-  //     try {
-  //       const res = await axios.post('http://localhost:8000/api/results/', {
-  //         game: 1,
-  //         user: 1,
-  //         bet: betAmount,
-  //         payout: payout,
-  //         result: result
-  //       });
-  //       console.log('🎉 GameResult zapisany:', res.data);
-  //     } catch (err) {
-  //       console.error('❌ Błąd zapisu wyniku:', err);
-  //     }
-  
-  //     // Obsługa UI
-  //     if (result === 'WIN') setBalance(prev => prev + payout);
-  //     else if (result === 'DRAW') setBalance(prev => prev + betAmount);
-  
-  //     setGameStatus(result.toLowerCase());
-  //     setGamePhase('game-over');
-  //   }, 100);
-  // };
-  
   const endGame = (forcedResult = null) => {
-    setIsDealerDrawing(false);
-  
-    setTimeout(async () => {
+  setIsDealerDrawing(false);
+
+  setTimeout(async () => {
+    const finalDealerScore = calculateHandValue(dealerHand);
+    let results = [];
+    let totalPayout = 0;
+
+    if (isSplit) {
+      // Evaluate each split hand separately
+      results = splitHands.map(hand => {
+        const handScore = calculateHandValue(hand);
+        let result;
+
+        if (handScore > 21) result = 'LOSE';
+        else if (finalDealerScore > 21) result = 'WIN';
+        else if (handScore > finalDealerScore) result = 'WIN';
+        else if (handScore < finalDealerScore) result = 'LOSE';
+        else result = 'DRAW';
+
+        // Blackjack check for split hands (typically counts as 21 in splits)
+        if (handScore === 21 && hand.length === 2) {
+          result = 'WIN'; // Usually split blackjacks pay 1:1
+        }
+
+        return result;
+      });
+
+      // Calculate total payout
+      totalPayout = results.reduce((total, result) => {
+        if (result === 'WIN') return total + betAmount;
+        if (result === 'DRAW') return total + betAmount;
+        return total;
+      }, 0);
+
+    } else {
+      // Original single hand logic
       const finalPlayerScore = calculateHandValue(playerHand);
-      const finalDealerScore = calculateHandValue(dealerHand);
-  
       let result = forcedResult;
-  
+
       if (!forcedResult) {
         if (finalPlayerScore > 21) result = 'LOSE';
         else if (finalDealerScore > 21) result = 'WIN';
         else if (finalPlayerScore > finalDealerScore) result = 'WIN';
         else if (finalPlayerScore < finalDealerScore) result = 'LOSE';
         else result = 'DRAW';
-      }
-  
-      let payout = 0;
-      if (result === 'WIN') payout = betAmount * 2;
-      else if (result === 'DRAW') payout = betAmount;
-  
-      try {
-        await axios.post('http://localhost:8000/api/results/', {
-          game: 1,
-          user: 1,
-          bet: betAmount,
-          payout: payout,
-          result: result // "WIN", "LOSE", "DRAW"
-        });
-        console.log('✅ Wynik zapisany:', result);
-      } catch (err) {
-        console.error('❌ Błąd zapisu wyniku:', err.response?.data || err.message);
-      }
-  
-      if (result === 'WIN') setBalance(prev => prev + payout);
-      else if (result === 'DRAW') setBalance(prev => prev + betAmount);
-  
-      setGameStatus(result.toLowerCase()); // 'win', 'lose', 'draw'
-      setGamePhase('game-over');
-    }, 300);
-  };
-  
-  
-  
-  
 
+        // Blackjack check
+        if (finalPlayerScore === 21 && playerHand.length === 2 &&
+            !(finalDealerScore === 21 && dealerHand.length === 2)) {
+          result = 'BLACKJACK';
+        }
+      }
+
+      results = [result];
+
+      if (result === 'WIN') totalPayout = betAmount * 2;
+      else if (result === 'BLACKJACK') totalPayout = Math.floor(betAmount * 2.5);
+      else if (result === 'DRAW') totalPayout = betAmount;
+    }
+
+    try {
+      await axios.post('http://localhost:8000/api/results/', {
+        game: 1,
+        user: 1,
+        bet: betAmount,
+        payout: totalPayout,
+        result: results.join(', ')
+      });
+    } catch (err) {
+      console.error('Error saving result:', err);
+    }
+
+    if (totalPayout > 0) {
+      setBalance(prev => prev + totalPayout);
+    }
+
+    setGameStatus(results.includes('WIN') ? 'win' :
+                 results.every(r => r === 'LOSE') ? 'lose' : 'draw');
+    setGamePhase('game-over');
+  }, 300);
+};
 
   const handleNewGame = () => {
     setGamePhase('betting');
@@ -503,148 +437,164 @@ const AnimatedCard = ({ balance, setBalance }) => {
     setBetAmount(0);
   };
 
-  return (
-    <div className="game-container">
-      <div className="controls-panel">
-        {gamePhase === 'betting' && (
-          <>
-            <div className="bet-controls">
-              <input 
-                type="number" 
-                placeholder="Bet amount" 
-                value={betAmount || ''}
-                onChange={handleBetChange}
-                className="bet-input"
-              />
-              <div className="bet-multipliers">
-                <button 
-                  onClick={() => multiplyBet(2)}
-                  className="multiplier-button"
-                >
-                  x2
-                </button>
-                <button 
-                  onClick={() => multiplyBet(0.5)}
-                  className="multiplier-button"
-                >
-                  1/2
-                </button>
-              </div>
-            </div>
-
-            <button 
-              onClick={startGame}
-              disabled={betAmount <= 0 || betAmount > balance}
-              className={`start-button ${(betAmount > 0 && betAmount <= balance) ? 'active' : 'disabled'}`}
-            >
-              Start Game
-            </button>
-          </>
-        )}
-
-        {gamePhase !== 'betting' && (
-          <div className="game-controls">
-            <div className="game-buttons-row">
-              <button 
-                onClick={handleHit}
-                disabled={gamePhase !== 'player-turn'}
-                className={`game-button ${gamePhase === 'player-turn' ? 'active' : 'disabled'}`}
-              >
-                Hit
+return (
+  <div className="game-container">
+    <div className="controls-panel">
+      {gamePhase === 'betting' && (
+        <>
+          <div className="bet-controls">
+            <input
+              type="number"
+              placeholder="Bet amount"
+              value={betAmount || ''}
+              onChange={handleBetChange}
+              className="bet-input"
+            />
+            <div className="bet-multipliers">
+              <button onClick={() => multiplyBet(2)} className="multiplier-button">
+                x2
               </button>
-              <button 
-                onClick={handleStand}
-                disabled={gamePhase !== 'player-turn'}
-                className={`game-button ${gamePhase === 'player-turn' ? 'active' : 'disabled'}`}
-              >
-                Stand
-              </button>
-            </div>
-            <div className="game-buttons-row">
-              <button 
-                onClick={handleDouble}
-                disabled={gamePhase !== 'player-turn' || playerHand.length !== 2 || betAmount > balance}
-                className={`game-button ${(gamePhase === 'player-turn' && playerHand.length === 2 && betAmount <= balance) ? 'active' : 'disabled'}`}
-              >
-                Double
-              </button>
-              <button 
-                onClick={handleSplit}
-                disabled={gamePhase !== 'player-turn' || playerHand.length !== 2 || 
-                  !playerHand[0]?.image.includes(playerHand[1]?.image.split('_')[0])}
-                className={`game-button ${(gamePhase === 'player-turn' && playerHand.length === 2 && 
-                  playerHand[0]?.image.includes(playerHand[1]?.image.split('_')[0])) ? 'active' : 'disabled'}`}
-              >
-                Split
+              <button onClick={() => multiplyBet(0.5)} className="multiplier-button">
+                1/2
               </button>
             </div>
           </div>
-        )}
 
-        {gamePhase === 'game-over' && (
-          <div className="game-over-panel">
-            {/* <h2 className={`result-message ${gameStatus}`}>
-              {gameStatus === 'won' ? 'You Won!' : 
-               gameStatus === 'lost' ? 'You Lost!' : 'It\'s a Tie!'}
-            </h2> */}
-            <h2 className={`result-message ${gameStatus}`}>
-              {gameStatus === 'win' ? 'You Won!' : 
-              gameStatus === 'lose' ? 'You Lost!' : 'It\'s a Tie!'}
-            </h2>
+          <button
+            onClick={startGame}
+            disabled={betAmount <= 0 || betAmount > balance}
+            className={`start-button ${(betAmount > 0 && betAmount <= balance) ? 'active' : 'disabled'}`}
+          >
+            Start Game
+          </button>
+        </>
+      )}
 
-
-            <button 
-              onClick={handleNewGame}
-              className="new-game-button"
+      {gamePhase !== 'betting' && (
+        <div className="game-controls">
+          <div className="game-buttons-row">
+            <button
+              onClick={handleHit}
+              disabled={gamePhase !== 'player-turn'}
+              className={`game-button ${gamePhase === 'player-turn' ? 'active' : 'disabled'}`}
             >
-              New Game
+              Hit
+            </button>
+            <button
+              onClick={handleStand}
+              disabled={gamePhase !== 'player-turn'}
+              className={`game-button ${gamePhase === 'player-turn' ? 'active' : 'disabled'}`}
+            >
+              Stand
             </button>
           </div>
-        )}
+          <div className="game-buttons-row">
+            <button
+              onClick={handleDouble}
+              disabled={gamePhase !== 'player-turn' || playerHand.length !== 2 || betAmount > balance}
+              className={`game-button ${(gamePhase === 'player-turn' && playerHand.length === 2 && betAmount <= balance) ? 'active' : 'disabled'}`}
+            >
+              Double
+            </button>
+            <button
+              onClick={handleSplit}
+              disabled={gamePhase !== 'player-turn' || playerHand.length !== 2 ||
+                !playerHand[0]?.image.includes(playerHand[1]?.image.split('_')[0])}
+              className={`game-button ${(gamePhase === 'player-turn' && playerHand.length === 2 && 
+                playerHand[0]?.image.includes(playerHand[1]?.image.split('_')[0])) ? 'active' : 'disabled'}`}
+            >
+              Split
+            </button>
+          </div>
+        </div>
+      )}
+
+      {gamePhase === 'game-over' && (
+        <div className="game-over-panel">
+          <h2 className={`result-message ${gameStatus}`}>
+            {gameStatus === 'win' ? 'You Won!' :
+            gameStatus === 'lose' ? 'You Lost!' : 'It\'s a Tie!'}
+          </h2>
+
+          <button onClick={handleNewGame} className="new-game-button">
+            New Game
+          </button>
+        </div>
+      )}
+    </div>
+
+   <div className="game-board">
+  {gamePhase === 'betting' ? (
+    <div className="betting-message">
+      <h2>Place your bet to start</h2>
+      <p>Current bet: {betAmount}</p>
+    </div>
+  ) : (
+    <>
+      <div className="hand dealer-hand">
+        <h2>Dealer's Hand (Score: {isSecondDealerCardHidden ? '?' : dealerScore})</h2>
+        {dealerHand.map((card, index) => (
+          <motion.div
+            key={card.id}
+            className="card"
+            initial={{ opacity: 0, top: 0, left: '50%' }}
+            animate={{ opacity: 1, top: 140, left: `calc(45% + ${index * 70}px)`, transform: 'translate(-50%, -50%)' }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
+            <img src={index === 1 && isSecondDealerCardHidden ? cardBackground : card.image} alt="Card" />
+          </motion.div>
+        ))}
       </div>
 
-      <div className="game-board">
-        {gamePhase === 'betting' ? (
-          <div className="betting-message">
-            <h2>Place your bet to start</h2>
-            <p>Current bet: {betAmount}</p>
-          </div>
-        ) : (
-          <>
-            <div className="hand dealer-hand">
-              <h2>Dealer's Hand (Score: {isSecondDealerCardHidden ? '?' : dealerScore})</h2>
-              {dealerHand.map((card, index) => (
+      {isSplit ? (
+        <div className="split-hands-container">
+          {splitHands.map((hand, handIndex) => (
+            <div
+              key={handIndex}
+              className={`hand player-hand split-hand ${handIndex === activeSplitIndex ? 'active-hand' : ''}`}
+              style={{ top: handIndex === 0 ? '40%' : '50%' }}
+            >
+              <h2>Hand {handIndex + 1} (Score: {splitScores[handIndex]})</h2>
+              {hand.map((card, cardIndex) => (
                 <motion.div
-                  key={card.id}
+                  key={`${handIndex}-${cardIndex}`}
                   className="card"
-                  initial={{ opacity: 0, top: 0, left: '50%' }}
-                  animate={{ opacity: 1, top: 170, left: `calc(50% + ${index * 50}px)`, transform: 'translate(-50%, -50%)' }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
-                  <img src={index === 1 && isSecondDealerCardHidden ? cardBackground : card.image} alt="Card" />
-                </motion.div>
-              ))}
-            </div>
-    
-            <div className="hand player-hand">
-              <h2>Player's Hand (Score: {playerScore})</h2>
-              {playerHand.map((card, index) => (
-                <motion.div
-                  key={card.id}
-                  className="card"
-                  initial={{ opacity: 0, top: 0, left: '50%' }}
-                  animate={{ opacity: 1, top: 170, left: `calc(50% + ${index * 50}px)`, transform: 'translate(-50%, -50%)' }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  initial={{ opacity: 0, y: -100 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: cardIndex * 0.1 }}
+                  style={{ left: `calc(40% + ${cardIndex * 80}px)`, transform: 'translate(-50%, -50%)' }}
                 >
                   <img src={card.image} alt="Card" />
                 </motion.div>
               ))}
             </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+          ))}
+        </div>
+      ) : (
+        <div className="hand player-hand">
+          <h2>Player's Hand (Score: {playerScore})</h2>
+          {playerHand.map((card, index) => (
+            <motion.div
+              key={index}
+              className="card"
+              initial={{ opacity: 0, y: -100 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              style={{ top: '70px',left: `calc(41% + ${index * 70}px)`, transform: 'translate(-50%, 50%)' }}
+            >
+              <img src={card.image} alt="Card" />
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </>
+  )}
+</div>
+
+
+  </div>
+);
+
 };
 
 export default AnimatedCard;
