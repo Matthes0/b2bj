@@ -7,20 +7,22 @@ export function MinesSidebar({
     onCashout, onStart, onReset, 
     gameOver, gameStarted,
     lossMessage,  remainingDiamonds,
-    remainingMines
+    remainingMines,  isAnimating
   }) {
   
+    const isStartDisabled = bet <= 0 || bet > balance || isAnimating;
+
   return (
     <div className="mines-sidebar">
       <h2>💣 Mines</h2>
-      <div className="stat"><span>Balance:</span> <strong>{balance}</strong></div>
+      <div className="stat"><span>Balance:</span> <strong>{balance.toFixed(2)}</strong></div>
 
       {!gameStarted && (
         <>
-          <div className="stat">
+          {/* <div className="stat">
             <span>Diamonds:</span>
             <input type="number" value={diamonds} min={1} max={24} onChange={(e) => setDiamonds(Number(e.target.value))} />
-          </div>
+          </div> */}
           <div className="stat">
             <span>Mines:</span>
             <input type="number" value={mines} min={1} max={24} onChange={(e) => setMines(Number(e.target.value))} />
@@ -29,7 +31,8 @@ export function MinesSidebar({
             <span>Bet:</span>
             <input type="number" value={bet} min={0} max={balance} onChange={(e) => setBet(Number(e.target.value))} />
           </div>
-          <button onClick={onStart} disabled={bet <= 0 || bet > balance}>🎮 Start</button>
+          {/* <button onClick={onStart} disabled={bet <= 0 || bet > balance}>🎮 Start</button> */}
+          <button onClick={onStart} disabled={isStartDisabled}>🎮 Start</button>
         </>
       )}
 
@@ -47,9 +50,10 @@ export function MinesSidebar({
 {gameOver && lossMessage && (
   <>
     <div className="loss-message">💥 You lost!</div>
-    <button className="reset-button" onClick={onReset}>🔁 Play Again</button>
+    <button className="reset-button" onClick={onReset} disabled={isAnimating}>🔁 Play Again</button>
   </>
 )}
+
 
     </div>
   );

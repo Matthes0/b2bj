@@ -14,15 +14,39 @@ export function Mines({ balance, setBalance }) {
   const [currentProfit, setCurrentProfit] = useState(0);
   const [lossMessage, setLossMessage] = useState("");
   const [clickedMineIndex, setClickedMineIndex] = useState(null);
-  
+  const [isAnimating, setIsAnimating] = useState(false);
+
   useEffect(() => setMines(totalTiles - diamonds), [diamonds]);
   useEffect(() => setDiamonds(totalTiles - mines), [mines]);
 
 
-  const baseMultiplier = 1 + (mines / 50);
-  const multiplier = (baseMultiplier + revealedDiamonds * 0.05).toFixed(2);
+//   const baseMultiplier = 1 + (mines / 50);
+//   const multiplier = (baseMultiplier + revealedDiamonds * 0.05).toFixed(2);
+//   const updatedProfit = revealedDiamonds > 0 ? (bet * multiplier).toFixed(2) : 0;
+  
+// BAZA: zawsze 1.0
+// np. przy 5 diamentach: 1 / 5 = 0.2 → większy przyrost
+// przy 20 diamentach: 1 / 20 = 0.05 → mniejszy przyrost
+
+// const baseMultiplier = 1.0;
+// const multiplierPerDiamond = 1 / diamonds;
+
+// const multiplier = (baseMultiplier + revealedDiamonds * multiplierPerDiamond).toFixed(2);
+// const updatedProfit = revealedDiamonds > 0 ? (bet * multiplier).toFixed(2) : 0;
+
+function calculateMultiplier(revealedDiamonds, diamonds, totalTiles) {
+    const base = 1.0;
+    const riskFactor = Math.log10((totalTiles - diamonds) / diamonds + 1); // zależne od proporcji bomb do diamentów
+  
+    const growth = Math.pow(1 + riskFactor, revealedDiamonds); // wzrost logarytmiczny
+    return (base * growth).toFixed(2);
+  }
+  
+  const multiplier = calculateMultiplier(revealedDiamonds, diamonds, totalTiles);
   const updatedProfit = revealedDiamonds > 0 ? (bet * multiplier).toFixed(2) : 0;
   
+
+
   
 
 useEffect(() => {
@@ -42,8 +66,21 @@ useEffect(() => {
   };
   
   
-  const handleStartGame = () => {
-    if (bet > 0 && bet <= balance) {
+//   const handleStartGame = () => {
+//     if (bet > 0 && bet <= balance) {
+//       setBalance(prev => prev - bet);
+//       setRevealedDiamonds(0);
+//       setCurrentProfit(0);
+//       setGameOver(false);
+//       setGameStarted(true);
+//       setLossMessage("");
+//       setClickedMineIndex(null); 
+//     }
+//   };
+  
+  
+const handleStartGame = () => {
+    if (bet > 0 && bet <= balance && !isAnimating) {
       setBalance(prev => prev - bet);
       setRevealedDiamonds(0);
       setCurrentProfit(0);
@@ -54,7 +91,7 @@ useEffect(() => {
     }
   };
   
-  
+
 
   const onRevealDiamond = () => {
     setRevealedDiamonds(prev => prev + 1);
@@ -91,6 +128,7 @@ useEffect(() => {
         onReset={handleResetGame}
         remainingDiamonds={diamonds - revealedDiamonds}
         remainingMines={gameOver && clickedMineIndex !== null ? mines - 1 : mines}
+        isAnimating={isAnimating}
       />
       <MinesBoard
         size={5}
@@ -101,6 +139,7 @@ useEffect(() => {
         gameStarted={gameStarted}
         clickedMineIndex={clickedMineIndex}
         setClickedMineIndex={setClickedMineIndex}
+        setIsAnimating={setIsAnimating}
       />
     </div>
   );

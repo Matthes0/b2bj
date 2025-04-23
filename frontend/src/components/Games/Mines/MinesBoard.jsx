@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MinesTile } from './MinesTile';
 
 function generateBoard(size, minesCount) {
@@ -14,84 +14,74 @@ function generateBoard(size, minesCount) {
   return board;
 }
 
-export function MinesBoard({ size, mines, onRevealDiamond, onHitMine, gameOver, gameStarted,clickedMineIndex,
-    setClickedMineIndex }) {
-    const [tiles, setTiles] = useState(Array(size * size).fill('hidden'));
-    // const [clickedMineIndex, setClickedMineIndex] = useState(null);
-    const [revealed, setRevealed] = useState(Array(size * size).fill(false));
-  
-    useEffect(() => {
-      setTiles(generateBoard(size, mines));
-      setRevealed(Array(size * size).fill(false));
-    }, [size, mines, gameStarted]);
-  
+export function MinesBoard({ size, mines, onRevealDiamond, onHitMine, gameOver, gameStarted,
+  clickedMineIndex, setClickedMineIndex, setIsAnimating }) {
 
-    useEffect(() => {
-        if (gameOver) {
-          const revealAll = (index = 0) => {
-            if (index >= size * size) return;
-      
-            setRevealed(prev => {
-              const updated = [...prev];
-              updated[index] = true;
-              return updated;
-            });
-      
-            setTimeout(() => {
-              revealAll(index + 1);
-            }, 40); // Tempo fali (ms)
-          };
-      
-          revealAll(); // Start
-        }
-      }, [gameOver, size]);
-      
-      
-      
+  const [tiles, setTiles] = useState(Array(size * size).fill('hidden'));
+  const [revealed, setRevealed] = useState(Array(size * size).fill(false));
+  const timeouts = useRef([]); // ⬅️ PRZECHOWUJEMY timeouty
 
-    // useEffect(() => {
-    //     if (gameOver) {
-    //       setRevealed(Array(size * size).fill(true));
-    //     }
-    //   }, [gameOver, size]);
-      
+  useEffect(() => {
+    // 🔁 Reset planszy
+    setTiles(generateBoard(size, mines));
+    setRevealed(Array(size * size).fill(false));
+    setClickedMineIndex(null);
 
-    // const handleReveal = (index) => {
-    //   if (revealed[index] || gameOver || !gameStarted) return;
-    //   const updated = [...revealed];
-    //   updated[index] = true;
-    //   setRevealed(updated);
-    //   if (tiles[index] === 'mine') onHitMine();
-    //   else onRevealDiamond();
-    // };
-  
-    const handleReveal = (index) => {
-        if (revealed[index] || gameOver || !gameStarted) return;
-        const updated = [...revealed];
-        updated[index] = true;
-        setRevealed(updated);
-      
-        if (tiles[index] === 'mine') {
-          setClickedMineIndex(index); // zapisz indeks klikniętej miny
-          onHitMine();
-        } else {
-          onRevealDiamond();
-        }
-      };
-      
+    // ❌ CZYSZCZENIE ANIMACJI
+    timeouts.current.forEach(t => clearTimeout(t));
+    timeouts.current = [];
+  }, [size, mines, gameStarted]);
 
-    return (
-      <div className="mines-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
-        {tiles.map((type, i) => (
-            <MinesTile
-                key={i}
-                type={revealed[i] ? tiles[i] : 'hidden'}
-                onClick={() => handleReveal(i)}
-                isMineHit={tiles[i] === 'mine' && clickedMineIndex === i}
-                />
-        ))}
-      </div>
-    );
-  }
-  
-  
+  useEffect(() => {
+    if (gameOver) {
+      setIsAnimating(true);
+      const revealAll = [...Array(size * size).keys()];
+
+      revealAll.forEach((tileIndex, delayIndex) => {
+        const timeout = setTimeout(() => {
+          setRevealed(prev => {
+            const updated = [...prev];
+            updated[tileIndex] = true;
+            return updated;
+          });
+
+          // ⏱ Ostatni kafelek kończy animację
+          if (delayIndex === revealAll.length - 1) {
+            const end = setTimeout(() => setIsAnimating(false), 200);
+            timeouts.current.push(end);
+          }
+        }, delayIndex * 50);
+
+        timeouts.current.push(timeout); // 📌 zapisz timeout
+      });
+    }
+  }, [gameOver, size, setIsAnimating]);
+
+  const handleReveal = (index) => {
+    if (revealed[index] || gameOver || !gameStarted) return;
+
+    const updated = [...revealed];
+    updated[index] = true;
+    setRevealed(updated);
+
+    if (tiles[index] === 'mine') {
+      setClickedMineIndex(index);
+      onHitMine();
+    } else {
+      onRevealDiamond();
+    }
+  };
+
+  return (
+    <div className="mines-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+      {tiles.map((type, i) => (
+        <MinesTile
+          key={i}
+          type={revealed[i] ? tiles[i] : 'hidden'}
+          onClick={() => handleReveal(i)}
+          isMineHit={tiles[i] === 'mine' && clickedMineIndex === i}
+        />
+      ))}
+    </div>
+  );
+}
