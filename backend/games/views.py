@@ -21,11 +21,7 @@ class GameListAPI(APIView):
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 
-# class BetListAPI(APIView):
-#     def get(self, request):
-#         bets = Bet.objects.all()
-#         serializer = BetSerializer(bets, many=True)
-#         return Response(serializer.data)
+
 
 
 
@@ -33,19 +29,13 @@ class BetListAPI(generics.ListCreateAPIView):
     queryset = Bet.objects.all()
     serializer_class = BetSerializer
 
-# class GameResultAPI(APIView):
-#     def get(self, request):
-#         results = GameResult.objects.all()
-#         serializer = GameResultSerializer(results, many=True)
-#         return Response(serializer.data)
+
 
 
 
 class GameResultAPI(generics.ListCreateAPIView):
     queryset = GameResult.objects.all()
     serializer_class = GameResultSerializer
-
-
 
 
 
@@ -152,3 +142,14 @@ def reset_game(request):
         if key in request.session:
             del request.session[key]
     return redirect('games:blackjack')
+
+# class BetListAPI(APIView):
+#     def get(self, request):
+#         bets = Bet.objects.all()
+#         serializer = BetSerializer(bets, many=True)
+#         return Response(serializer.data)
+# class GameResultAPI(APIView):
+#     def get(self, request):
+#         results = GameResult.objects.all()
+#         serializer = GameResultSerializer(results, many=True)
+#         return Response(serializer.data)
