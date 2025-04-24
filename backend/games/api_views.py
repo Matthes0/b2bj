@@ -19,8 +19,22 @@ class GameListAPI(APIView):
         games = Game.objects.all()
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
+@method_decorator(csrf_exempt, name='dispatch')
+class BlackjackStartAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def post(self, request):
+        # 1. Generujemy nową talię
+        deck = utils.create_deck()
 
+        # 2. Zapisujemy w sesji (opcjonalnie, jeśli chcesz stan na backendzie)
+        request.session['bj_deck'] = deck
+
+        # 3. Zwracamy talię (możesz też zwrócić tylko pierwsze karty itp.)
+        return Response({
+            "deck": deck,
+            "deck_count": len(deck),
+        }, status=status.HTTP_201_CREATED)
 @method_decorator(csrf_exempt, name='dispatch')
 class BetListCreateAPI(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -4,7 +4,7 @@ from django.urls import path
 from .api_views import (
     GameListAPI,
     BetListCreateAPI, BetDetailAPI,
-    GameResultListCreateAPI, GameResultDetailAPI,
+    GameResultListCreateAPI, GameResultDetailAPI, BlackjackStartAPI,
 )
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('api/bets/<int:pk>/', BetDetailAPI.as_view(), name='api-bets-detail'),
     path('api/results/', GameResultListCreateAPI.as_view(), name='api-results-list-create'),
     path('api/results/<int:pk>/', GameResultDetailAPI.as_view(), name='api-results-detail'),
+    path('api/blackjack/start/', BlackjackStartAPI.as_view(), name='api-bj-start'),
 ]
