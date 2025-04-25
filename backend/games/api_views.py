@@ -52,7 +52,6 @@ class BlackjackShuffleAPI(APIView):
             "deck_count": len(deck),
         }, status=200)
 
-@method_decorator(csrf_exempt, name='dispatch')
 class BetListCreateAPI(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Bet.objects.all()

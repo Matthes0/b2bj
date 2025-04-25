@@ -56,6 +56,7 @@ import queenOfDiamonds from './karty/queen_of_diamonds.png';
 import queenOfHearts from './karty/queen_of_hearts.png';
 import queenOfSpades from './karty/queen_of_spades.png';
 import cardBackground from './karty/card_background.png';
+import {getCurrentUser} from "./api/auth.jsx";
 
 const initialCardImages = [
   tenOfClubs, tenOfDiamonds, tenOfHearts, tenOfSpades,
@@ -110,7 +111,15 @@ const calculateHandValue = (hand) => {
   return value;
 };
 
-const AnimatedCard = ({ balance, setBalance }) => {
+const AnimatedCard = () => {
+    const [user, setUser] = useState(null);
+    const [balance, setBalance] = useState(0); // <- To jest setBalance
+    useEffect(() => {
+    getCurrentUser().then(data => {
+      setUser(data);
+      setBalance(data.profile.balance); // <- Ustawiamy początkowy balans
+    });
+    }, []);
   const [playerHand, setPlayerHand] = useState([]);
   const [betAmount, setBetAmount] = useState(0);
   const [dealerHand, setDealerHand] = useState([]);
@@ -137,17 +146,30 @@ const AnimatedCard = ({ balance, setBalance }) => {
   const multiplyBet = (multiplier) => {
     setBetAmount(prev => Math.max(0, Math.floor(prev * multiplier)));
   };
-
+function getCookie(name) {
+  const cookieValue = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(name + "="));
+  return cookieValue ? decodeURIComponent(cookieValue.split("=")[1]) : null;
+}
   const startGame = async () => {
   if (betAmount <= 0 || betAmount > balance) return;
-
+const csrfToken = getCookie('csrftoken');
   try {
-    const res = await axios.post('http://localhost:8000/api/bets/', {
+    const res = await axios.post('http://localhost:8000/api/games/bets/', {
       game: 1,
       user: 1,
       amount: betAmount,
       rate: 2.0
-    });
+    },
+     {
+      withCredentials: true,
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json',
+      },
+    }
+    );
     console.log('Zakład zapisany w Django:', res.data);
   } catch (err) {
     console.error('Błąd przy zapisie zakładu:', err);
@@ -410,7 +432,7 @@ const handleSplit = async () => {
     }
 
     try {
-      await axios.post('http://localhost:8000/api/results/', {
+      await axios.post('http://localhost:8000/api/games/results/', {
         game: 1,
         user: 1,
         bet: betAmount,
