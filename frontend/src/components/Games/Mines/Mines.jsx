@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { MinesSidebar } from './MinesSidebar';
 import { MinesBoard } from './MinesBoard';
 import './Mines.css';
+import {getCurrentUser} from "../../../api/auth.jsx";
 
-export function Mines({ balance, setBalance }) {
+export function Mines() {
+      const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getCurrentUser().then(data => {
+      setUser(data);
+    });
+  }, []);
+
   const totalTiles = 25;
   const [diamonds, setDiamonds] = useState(5);
   const [mines, setMines] = useState(20);
@@ -80,7 +89,7 @@ useEffect(() => {
   
   
 const handleStartGame = () => {
-    if (bet > 0 && bet <= balance && !isAnimating) {
+    if (bet > 0 && bet <= user.profile.balance && !isAnimating) {
       setBalance(prev => prev - bet);
       setRevealedDiamonds(0);
       setCurrentProfit(0);
@@ -117,7 +126,7 @@ const handleStartGame = () => {
         setMines={setMines}
         bet={bet}
         setBet={setBet}
-        balance={balance}
+        balance={user.profile.balance}
         multiplier={multiplier}
         profit={currentProfit}
         onCashout={handleCashout}

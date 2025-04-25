@@ -16,7 +16,7 @@ def register_view(request):
         form = PlayerCreateForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("user:user_list")
+            return redirect("http://localhost:5173/login")
     else:
         form = PlayerCreateForm()
     return render(request, "user/register.html", {"form": form})

@@ -96,6 +96,8 @@ import Contact from './Contact';
 import AnimatedCard from './AnimatedCard';
 import UserPage from './UserPage';
 import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
+import RequireAuth from './RequireAuth';
 import './index.css';
 
 import { Home } from './components/Home/Home';
@@ -107,7 +109,6 @@ import { Mines } from './components/Games/Mines/Mines';
 
 
 function App() {
-  const [balance, setBalance] = useState(1000);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const togglePanel = () => setIsPanelOpen(prev => !prev);
@@ -115,20 +116,21 @@ function App() {
 
   return (
     <Router>
-       <Header balance={balance} togglePanel={togglePanel} />
+       <Header togglePanel={togglePanel} />
       <Panel
         isPanelOpen={isPanelOpen}
         closePanel={closePanel}
       />
       <NavigationPanel />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/user" element={<UserPage />} />
-        <Route path="/bj" element={<AnimatedCard balance={balance} setBalance={setBalance} />} />
-        <Route path="/mines" element={<Mines balance={balance} setBalance={setBalance} />} />
+        <Route path="/" element={<RequireAuth> <Home /> </RequireAuth>} />
+        <Route path="/about" element={<RequireAuth> <About /> </RequireAuth>} />
+        <Route path="/contact" element={<RequireAuth><Contact /> </RequireAuth>} />
+        <Route path="/bj" element={<RequireAuth> <AnimatedCard /> </RequireAuth>} />
+        <Route path="/mines" element={<RequireAuth> <Mines /> </RequireAuth>} />
       </Routes>
       <Footer />
     </Router>

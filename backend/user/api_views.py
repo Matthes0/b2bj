@@ -32,6 +32,7 @@ class ApiLogoutView(View):
         logout(request)
         return JsonResponse({"success": True})
 
+
 class ApiUserView(View):
     def get(self, request):
         if request.user.is_authenticated:
@@ -42,7 +43,10 @@ class ApiUserView(View):
                 "email": user.email,
                 "profile": {
                     "balance": profile.balance if profile else None,
+                    "date_of_birth": profile.date_of_birth if profile else None,
+                    "country": str(profile.country.name) if profile else None,
                     "games_played": profile.games_played if profile else None,
                     "games_won": profile.games_won if profile else None,
+                    "total_winnings": profile.total_winnings if profile else None,
                 }})
         return JsonResponse({"authenticated": False}, status=401)
