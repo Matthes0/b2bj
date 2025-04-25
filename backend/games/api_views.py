@@ -20,21 +20,38 @@ class GameListAPI(APIView):
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 @method_decorator(csrf_exempt, name='dispatch')
-class BlackjackStartAPI(APIView):
+class BlackjackReshuffleAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        # 1. Generujemy nową talię
         deck = utils.create_deck()
 
-        # 2. Zapisujemy w sesji (opcjonalnie, jeśli chcesz stan na backendzie)
         request.session['bj_deck'] = deck
 
-        # 3. Zwracamy talię (możesz też zwrócić tylko pierwsze karty itp.)
         return Response({
             "deck": deck,
             "deck_count": len(deck),
         }, status=status.HTTP_201_CREATED)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class BlackjackShuffleAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        deck = request.session.get('bj_deck')
+
+        if not deck:
+            return Response({"error": "No deck found in session to shuffle."}, status=400)
+
+        # Shuffle and update session
+        deck = utils.shuffle_deck(deck)
+        request.session['bj_deck'] = deck
+
+        return Response({
+            "shuffled_deck": deck,
+            "deck_count": len(deck),
+        }, status=200)
+
 @method_decorator(csrf_exempt, name='dispatch')
 class BetListCreateAPI(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]

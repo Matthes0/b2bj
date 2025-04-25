@@ -13,7 +13,9 @@ def create_deck():
     deck = [(rank, suit) for suit in suits for rank in ranks]
     random.shuffle(deck)
     return deck
-
+def shuffle_deck(deck):
+    random.shuffle(deck)
+    return deck
 def calculate_hand_value(hand):
     value = 0
     aces = 0
