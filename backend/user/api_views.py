@@ -50,3 +50,46 @@ class ApiUserView(View):
                     "total_winnings": profile.total_winnings if profile else None,
                 }})
         return JsonResponse({"authenticated": False}, status=401)
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ApiUserBalanceView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            profile = getattr(request.user, 'playerprofile', None)
+            if profile:
+                return JsonResponse({"balance": profile.balance})
+            return JsonResponse({"error": "Profile not found"}, status=404)
+        return JsonResponse({"authenticated": False}, status=401)
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return JsonResponse({"authenticated": False}, status=401)
+
+        try:
+            data = json.loads(request.body)
+            amount = data.get("amount")
+            action = data.get("action")  # "add" or "subtract"
+
+            profile = getattr(request.user, 'playerprofile', None)
+            if not profile:
+                return JsonResponse({"error": "Profile not found"}, status=404)
+
+            if not isinstance(amount, (int, float)):
+                return JsonResponse({"error": "Amount must be numeric"}, status=400)
+
+            if action == "add":
+                profile.balance += amount
+            elif action == "subtract":
+                if profile.balance < amount:
+                    return JsonResponse({"error": "Insufficient balance"}, status=400)
+                profile.balance -= amount
+            else:
+                return JsonResponse({"error": "Invalid action"}, status=400)
+
+            profile.save()
+
+            return JsonResponse({"success": True, "new_balance": profile.balance})
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
