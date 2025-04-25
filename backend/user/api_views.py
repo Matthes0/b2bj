@@ -70,7 +70,7 @@ class ApiUserBalanceView(View):
         try:
             data = json.loads(request.body)
             amount = data.get("amount")
-            action = data.get("action")  # "add" or "subtract"
+            action = data.get("action")
 
             profile = getattr(request.user, 'playerprofile', None)
             if not profile:
@@ -93,3 +93,5 @@ class ApiUserBalanceView(View):
             return JsonResponse({"success": True, "new_balance": profile.balance})
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
+## dodawanie w json { "amount": 50, "action": "add" }
+## odejmowanie w json { "amount": 50, "action": "subtract" }
