@@ -13,49 +13,121 @@
 
 .wallet-popup {
   width: 700px;
-  min-height: 400px;
+  min-height: 500px;
   background-color: #1e2d3b;
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   display: flex;
-  border-radius: 12px;
+  border-radius: 12px; /* Added rounded corners */
 }
 
 .left-panel {
   width: 35%;
-  background-color: #233343;
+  background-color: #233343; /* Changed color */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  border-radius: 12px 0 0 12px;
+  border-radius: 12px 0 0 12px; /* Rounded corners for left panel */
 }
 
 .left-panel button {
-  background-color: #233343;
+  background-color: #233343; /* Same background color */
   color: white;
   padding: 15px;
-  border: 2px solid #0E2133;
+  border: 2px solid #0E2133; /* Border color */
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  width: 80%;
-  align-self: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Bottom shadow */
+  width: 80%; /* Not full width */
+  align-self: center; /* Center align */
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
 
 .left-panel button img {
-  width: 32px;
-  height: 32px;
-  margin-right: 10px;
+  width: 32px; /* Increased width */
+  height: 32px; /* Increased height */
+  margin-left: 10px; /* Adjusted margin */
 }
 
 .right-panel {
-  width: 65%;
-  background-color: #0E2133;
+  width: 65%; /* Adjusted width to fit within the popup */
+  background-color: #0E2133; /* Changed color */
   padding: 20px;
   text-align: center;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 12px 12px 0; /* Rounded corners for right panel */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space between elements */
+}
+
+.deposit-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deposit-options button {
+  background-color: #0E2133; /* Same background color */
+  color: white;
+  padding: 15px;
+  border: 2px solid #233343; /* Border color */
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Bottom shadow */
+  width: 80%; /* Not full width */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.deposit-options button img {
+  width: 32px; /* Increased width */
+  height: 32px; /* Increased height */
+  margin-left: 10px; /* Adjusted margin */
+}
+
+.deposit-details {
+  margin-top: 20px;
+  background-color: #0E2133;
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%;
+  align-self: center; /* Center align */
+}
+
+.withdraw-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.account-selection, .amount-section {
+  margin-bottom: 20px;
+}
+
+.account-selection label, .amount-section label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.account-selection input, .amount-section input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 2px solid #233343;
+}
+
+.amount-section button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Bottom shadow */
 }
