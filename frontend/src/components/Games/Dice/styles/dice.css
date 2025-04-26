@@ -1,0 +1,89 @@
+/* DiceGame.css */
+.game-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.controls-panel {
+  width: 50%;
+  padding: 20px;
+  background-color: #314559;
+}
+
+.slider-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.slider {
+  width: 100%;
+  height: 25px;
+  background: linear-gradient(to right, green 0%, green 100%);
+  appearance: none;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider-value {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  color: green;
+}
+
+.generate-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.result-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.result-box {
+  text-align: center;
+
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.result-message {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.result-message.win {
+  color: green;
+}
+
+.result-message.lose {
+  color: red;
+}
+
+.generated-point {
+  position: absolute;
+  top: -30px;
+  width: 0;
+  height: 0;
+  border-left: 12.5px solid transparent;
+  border-right: 12.5px solid transparent;
+  border-top: 25px solid red;
+  transform: translateX(-50%);
+  transition: left 0.5s ease-out;
+}

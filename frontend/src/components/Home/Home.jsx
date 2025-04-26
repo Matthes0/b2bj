@@ -35,6 +35,12 @@ export function Home() {
         </Link>
       </div>
 
+          <div className="featured-game">
+        <Link to="/dice" className="featured-link">
+          <span className="game-icon">🎲</span> <span className="game-text">Zagraj w Dragon Dice</span>
+        </Link>
+      </div>
+
       <GameList games={games} />
     </div>
   );
