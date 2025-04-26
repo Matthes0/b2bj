@@ -113,7 +113,16 @@ function App() {
 
   const togglePanel = () => setIsPanelOpen(prev => !prev);
   const closePanel = () => setIsPanelOpen(false);
+const App = () => {
 
+    const togglePanel = () => {
+        setIsPanelOpen(!isPanelOpen);
+    };
+
+    const closePanel = () => {
+        setIsPanelOpen(false);
+    };
+}
   return (
     <Router>
        <Header togglePanel={togglePanel} />

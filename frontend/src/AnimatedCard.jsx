@@ -484,7 +484,7 @@ return (
 
           <button
             onClick={startGame}
-            disabled={betAmount <= 0 || betAmount > balance}
+            disabled={betAmount <= 0 || betAmount >= balance}
             className={`start-button ${(betAmount > 0 && betAmount <= balance) ? 'active' : 'disabled'}`}
           >
             Start Game
