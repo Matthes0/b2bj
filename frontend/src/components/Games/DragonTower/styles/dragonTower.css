@@ -1,0 +1,165 @@
+.dragon-tower-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    background-color: #0d1117;
+    min-height: 100vh;
+  }
+  
+  .dragon-tower-container {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .control-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+    width: 250px;
+  }
+  
+  .panel-section {
+    margin-bottom: 20px;
+  }
+  
+  .panel-button {
+    background: #2c313a;
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 100px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .panel-button.active {
+    background: limegreen;
+  }
+  
+  .bet-input, .difficulty-select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .bet-actions button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    background: #2c313a;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .play-button {
+    padding: 12px;
+    background-color: limegreen;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  .dragon-grid {
+    display: grid;
+    gap: 10px;
+    background: #161b22;
+    padding: 15px;
+    border-radius: 10px;
+    width: 390px;
+  }
+  
+  .tile {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 60px;
+  }
+  
+  .tile img {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .tile-highlight {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .tile-success {
+    background-color: rgba(0, 255, 0, 0.15);
+  }
+  
+  .tile-fail {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+  
+  
+  
+  .cashout-button {
+    padding: 12px;
+    background-color: #3498db;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .tile-highlight {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .dragon-tower-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* zamiast center */
+    padding: 50px;
+    background-color: #0d1117;
+    min-height: 100vh;
+}
+
+.tile-faded {
+    opacity: 0.4;
+    filter: grayscale(100%);
+  }
+  
+  .tile-faded {
+    opacity: 0.4;
+    filter: grayscale(100%);
+  }
+  .tile-highlight {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .tile-faded {
+    opacity: 0.4;
+    filter: grayscale(100%);
+  }
+  
+  .tile-highlight {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .tile-bomb-hit {
+    background-color: rgba(255, 0, 0, 0.4);
+  }
+  

@@ -106,7 +106,7 @@ import { Panel } from './components/Panel/Panel';
 import { NavigationPanel } from './components/NavigationPanel/NavigationPanel';
 import { Footer } from './components/Footer/Footer/Footer';
 import { Mines } from './components/Games/Mines/Mines';
-
+import { DragonTower } from './components/Games/DragonTower/DragonTower';
 
 function App() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -131,6 +131,7 @@ function App() {
         <Route path="/contact" element={<RequireAuth><Contact /> </RequireAuth>} />
         <Route path="/bj" element={<RequireAuth> <AnimatedCard /> </RequireAuth>} />
         <Route path="/mines" element={<RequireAuth> <Mines /> </RequireAuth>} />
+        <Route path="/dragontower" element={<RequireAuth> <DragonTower /> </RequireAuth>} />
       </Routes>
       <Footer />
     </Router>

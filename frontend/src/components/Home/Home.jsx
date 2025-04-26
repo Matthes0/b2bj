@@ -29,6 +29,11 @@ export function Home() {
   </Link>
 </div>
 
+      <div className="featured-game">
+        <Link to="/dragontower" className="featured-link">
+          <span className="game-icon">🐉</span> <span className="game-text">Zagraj w Dragon Tower</span>
+        </Link>
+      </div>
 
       <GameList games={games} />
     </div>
