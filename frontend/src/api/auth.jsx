@@ -1,6 +1,6 @@
 // src/api/auth.js
 
-const API_BASE = "http://localhost:8000/users/api";
+const API_BASE = "http://localhost:8000/api/users";
 
 // export async function login(username, password) {
 //   const response = await fetch(`${API_BASE}/login/`, {
@@ -40,7 +40,7 @@ export async function login(username, password) {
 // }
 
 export async function fetchCSRFToken() {
-  const res = await fetch("http://localhost:8000/users/api/login/", {
+  const res = await fetch(`${API_BASE}/login/`, {
     method: "GET",
     credentials: "include",
   });
