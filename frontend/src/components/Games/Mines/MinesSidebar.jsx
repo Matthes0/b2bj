@@ -25,7 +25,17 @@ export function MinesSidebar({
           </div> */}
           <div className="stat">
             <span>Mines:</span>
-            <input type="number" value={mines} min={1} max={24} onChange={(e) => setMines(Number(e.target.value))} />
+            <input
+              type="number"
+              value={mines}
+              min={1}
+              max={24}
+              onChange={(e) => {
+                const value = Math.max(1, Number(e.target.value));
+                setMines(value);
+              }}
+            />
+
           </div>
           <div className="stat">
             <span>Bet:</span>

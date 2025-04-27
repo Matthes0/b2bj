@@ -108,6 +108,8 @@ import { Footer } from './components/Footer/Footer/Footer';
 import { Mines } from './components/Games/Mines/Mines';
 import { DragonTower } from './components/Games/DragonTower/DragonTower';
 import { Dice } from './components/Games/Dice/Dice';
+import { HiloGame } from './components/Games/Hilo/HiloGame';
+
 
 function App() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -143,6 +145,7 @@ const App = () => {
         <Route path="/mines" element={<RequireAuth> <Mines /> </RequireAuth>} />
         <Route path="/dragontower" element={<RequireAuth> <DragonTower /> </RequireAuth>} />
         <Route path="/dice" element={<RequireAuth><Dice /></RequireAuth>} />
+        <Route path="/hilo" element={<RequireAuth><HiloGame /></RequireAuth>} />
       </Routes>
       <Footer />
     </Router>

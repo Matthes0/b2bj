@@ -10,7 +10,8 @@ export function Mines() {
     useEffect(() => {
     getCurrentUser().then(data => {
       setUser(data);
-      setBalance(data.profile.balance); // <- Ustawiamy początkowy balans
+      setBalance(data?.profile?.balance ?? 0.0);
+
     });
     }, []);
 

@@ -57,7 +57,9 @@ export function Header({ togglePanel }) {
               <>
         <div className="wallet-header" onClick={togglePanel}>
           <div className="wallet-info">
-            <span className="currency">PLN {user.profile.balance.toFixed(2)}</span>
+          <span className="currency">
+            PLN {user?.profile?.balance != null ? user.profile.balance.toFixed(2) : '0.00'}
+          </span>
             <span className="wallet-icon">🪙</span>
             <span className="arrow">▼</span>
           </div>
