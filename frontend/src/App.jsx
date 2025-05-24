@@ -17,7 +17,7 @@
 //   const [balance, setBalance] = useState(1000); // Inicjalizacja na 1000
 //   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-//   const togglePanel = () => {
+//   const togglePanel = (  ) => {
 //     setIsPanelOpen(!isPanelOpen);
 //   };
 

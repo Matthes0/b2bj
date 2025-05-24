@@ -3,17 +3,18 @@ import { MinesSidebar } from './MinesSidebar';
 import { MinesBoard } from './MinesBoard';
 import './Mines.css';
 import {getCurrentUser} from "../../../api/auth.jsx";
+import  {fetchUserBalance, subtractBalance, addBalance} from "../../../AnimatedCard.jsx";
 
 export function Mines() {
     const [user, setUser] = useState(null);
     const [balance, setBalance] = useState(0); // <- To jest setBalance
     useEffect(() => {
-    getCurrentUser().then(data => {
-      setUser(data);
-      setBalance(data?.profile?.balance ?? 0.0);
-
+    fetchUserBalance().then(balance => {
+      if (balance !== null) {
+        setBalance(balance);
+      }
     });
-    }, []);
+  }, []);
 
   const totalTiles = 25;
   const [diamonds, setDiamonds] = useState(5);
@@ -92,15 +93,19 @@ useEffect(() => {
   
 const handleStartGame = () => {
     if (bet > 0 && bet <= balance && !isAnimating) {
-      setBalance(prev => prev - bet);
-      setRevealedDiamonds(0);
-      setCurrentProfit(0);
-      setGameOver(false);
-      setGameStarted(true);
-      setLossMessage("");
-      setClickedMineIndex(null); 
+        subtractBalance(bet).then(newBalance => {
+            setBalance(newBalance);
+            setRevealedDiamonds(0);
+            setCurrentProfit(0);
+            setGameOver(false);
+            setGameStarted(true);
+            setLossMessage("");
+            setClickedMineIndex(null);
+        }).catch(err => {
+            console.error("Błąd podczas odejmowania balansu:", err);
+        });
     }
-  };
+}
   
 
 
@@ -114,7 +119,13 @@ const handleStartGame = () => {
   };
 
   const handleCashout = () => {
-    setBalance(prev => prev + parseFloat(currentProfit));
+    addBalance(parseFloat(currentProfit)).then(newBalance => {
+        setBalance(newBalance);
+        setGameOver(true);
+        setGameStarted(false);
+    }).catch(err => {
+        console.error("Błąd podczas dodawania balansu:", err);
+    });
     setGameOver(true);
     setGameStarted(false);
   };

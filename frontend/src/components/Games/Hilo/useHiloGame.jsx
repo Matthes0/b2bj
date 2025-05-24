@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import  {fetchUserBalance, subtractBalance, addBalance} from "../../../AnimatedCard.jsx";
 
 const suits = ["hearts", "diamonds", "clubs", "spades"];
 const ranks = [
@@ -28,6 +29,14 @@ const generateDeck = () => {
 };
 
 export function useHiloGame() {
+    const [balance, setBalance] = useState(0);
+  useEffect(() => {
+    fetchUserBalance().then(balance => {
+      if (balance !== null) {
+        setBalance(balance);
+      }
+    }).catch(err => console.error("Failed to fetch balance:", err));
+  }, []);
   const [deck, setDeck] = useState([]);
   const [currentCard, setCurrentCard] = useState(null);
   const [profit, setProfit] = useState(0);
@@ -84,7 +93,7 @@ export function useHiloGame() {
   };
 
   const placeFirstBet = () => {
-    if (betAmount > 0) {
+    if (betAmount > 0 ) {
       if (gameStatus === "lost" || deck.length === 0) {
         resetGame();
         setGameStarted(true);
@@ -221,21 +230,28 @@ export function useHiloGame() {
   };
   
 
-  const cashout = () => {
-    if (profit > 0) {
-      const newDeck = generateDeck();
-      const firstCard = newDeck.pop();
-      setDeck(newDeck);
-      setCurrentCard(firstCard);
-      setProfit(0);
-      setGameStatus("idle");
-      setSelectedOption(null);
-      setHistory([firstCard]);
-      setBetAmount(1);
-      setGameStarted(false);
-      setCardAnimationKey(0);
+const cashout = async () => {
+  if (profit > 0) {
+    try {
+      await addBalance(profit);
+      setBalance(prev => +(prev + profit).toFixed(2));
+    } catch (error) {
+      console.error("Failed to add profit to balance:", error);
     }
-  };
+
+    const newDeck = generateDeck();
+    const firstCard = newDeck.pop();
+    setDeck(newDeck);
+    setCurrentCard(firstCard);
+    setProfit(0);
+    setGameStatus("idle");
+    setSelectedOption(null);
+    setHistory([firstCard]);
+    setBetAmount(1);
+    setGameStarted(false);
+    setCardAnimationKey(0);
+  }
+};
   
 
   const resetGame = () => {
