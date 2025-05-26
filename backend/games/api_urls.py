@@ -1,6 +1,4 @@
 from django.urls import path
-from .views import GameListAPI, BetListAPI, GameResultAPI
-from django.urls import path
 from .api_views import (
     GameListAPI,
     BetListCreateAPI, BetDetailAPI,

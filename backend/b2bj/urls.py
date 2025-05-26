@@ -15,5 +15,6 @@ urlpatterns = [
 
     path('bonuses/', include('bonuses.urls', namespace='bonuses')),
     path('payments/', include('payments.urls', namespace='payments')),
+    path('api/payments/', include('payments.api_urls')),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
 ]

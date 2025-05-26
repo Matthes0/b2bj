@@ -4,6 +4,7 @@
 - pip install django-cors-headers
 - pip install django-countries
 - pip install Pillow
+- pip install python-dotenv
 
 launching backend:
 - python manage.py runserver

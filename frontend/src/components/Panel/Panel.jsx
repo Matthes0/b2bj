@@ -28,11 +28,12 @@ import coin from '../../assets/Panel/coin.png';
 import blikIcon from '../../assets/Panel/blik.png';
 import cardIcon from '../../assets/Panel/card.png';
 import paysafecardIcon from '../../assets/Panel/paysafecard.png';
+import axios from 'axios';
 
 export function Panel({ isPanelOpen, closePanel }) {
   const [activePanel, setActivePanel] = useState('deposit');
   const [activeDepositType, setActiveDepositType] = useState(null);
-
+  const [blikAmount, setBlikAmount] = useState(10);
   if (!isPanelOpen) return null;
 
   return (
@@ -70,7 +71,39 @@ export function Panel({ isPanelOpen, closePanel }) {
             </div>
           )}
           <div className="deposit-details">
-            {activeDepositType === 'blik' && <div>Blik (tu pojawi się zawartość)</div>}
+            {activeDepositType === 'blik' && (
+  <div className="blik-section">
+    <h3>Doładuj przez Blik</h3>
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+      try {
+        const response = await axios.post(
+          'http://localhost:8000/api/payments/top-up/',
+          { amount: blikAmount * 100 },
+          { withCredentials: true }
+        );
+
+        if (response.data.redirect_url) {
+          window.location.href = response.data.redirect_url;
+        }
+      } catch (error) {
+        console.error('Błąd:', error.response?.data || error.message);
+      }
+      }}
+    >
+      <label>Kwota doładowania (zł)</label>
+      <input
+        type="number"
+        min="1"
+        step="0.01"
+        value={blikAmount}
+        onChange={(e) => setBlikAmount(parseFloat(e.target.value))}
+      />
+      <button type="submit">Zapłać Blikiem</button>
+    </form>
+  </div>
+)}
             {activeDepositType === 'card' && <div>Karta (tu pojawi się zawartość)</div>}
             {activeDepositType === 'paysafecard' && <div>Paysafecard (tu pojawi się zawartość)</div>}
           </div>
