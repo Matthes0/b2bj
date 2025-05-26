@@ -12,3 +12,4 @@ class PlayerProfile(models.Model):
     games_played = models.IntegerField(default=0)
     games_won = models.IntegerField(default=0)
     total_winnings = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    last_free_coin_window = models.DateTimeField(null=True, blank=True)

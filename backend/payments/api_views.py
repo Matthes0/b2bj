@@ -1,9 +1,11 @@
+import datetime
 import os
 import traceback
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
+from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
@@ -134,3 +136,35 @@ class ApiNotifyView(View):
         except Exception as e:
             print(traceback.format_exc())
             return HttpResponse(f"Internal error: {str(e)}", status=500)
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ApiFreeCoinView(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return JsonResponse({"authenticated": False}, status=401)
+
+        profile = PlayerProfile.objects.get(user=request.user)
+        current_time = now()
+
+        current_window = current_time.replace(minute=(current_time.minute // 10) * 10, second=0, microsecond=0)
+
+        if profile.last_free_coin_window == current_window:
+            next_window = current_window + datetime.timedelta(minutes=10)
+            remaining_seconds = int((next_window - current_time).total_seconds())
+            return JsonResponse({
+                "success": False,
+                "message": "Już odebrano w tym oknie!",
+                "remaining_seconds": remaining_seconds
+            })
+
+        profile.balance += 10
+        profile.last_free_coin_window = current_window
+        profile.save()
+
+        return JsonResponse({
+            "success": True,
+            "message": "Dodano 10 zł!",
+            "next_claim_in": 600  # sekundy do następnego okna
+        })

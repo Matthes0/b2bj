@@ -17,7 +17,7 @@
 // }
 
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import './Panel.css';
 
 import { useState } from 'react';
@@ -34,8 +34,38 @@ export function Panel({ isPanelOpen, closePanel }) {
   const [activePanel, setActivePanel] = useState('deposit');
   const [activeDepositType, setActiveDepositType] = useState(null);
   const [blikAmount, setBlikAmount] = useState(10);
+const [freeCoinsMessage, setFreeCoinsMessage] = useState('');
+const [cooldown, setCooldown] = useState(0);
+
+  // Odliczanie co sekundę
+  useEffect(() => {
+    if (cooldown > 0) {
+      const interval = setInterval(() => {
+        setCooldown(prev => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [cooldown]);
   if (!isPanelOpen) return null;
 
+  const handleClaimFreeCoins = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/payments/free-coins/',
+        {},
+        { withCredentials: true }
+      );
+      if (response.data.success) {
+        setFreeCoinsMessage(response.data.message);
+        setCooldown(response.data.next_claim_in);
+      } else {
+        setFreeCoinsMessage(response.data.message);
+        setCooldown(response.data.remaining_seconds);
+      }
+    } catch (err) {
+      setFreeCoinsMessage('Wystąpił błąd podczas odbierania monet.');
+    }
+  };
   return (
     <div className="overlay" onClick={closePanel}>
       <div className="wallet-popup" onClick={(e) => e.stopPropagation()}>
@@ -123,7 +153,16 @@ export function Panel({ isPanelOpen, closePanel }) {
               </div>
             </div>
           )}
-          {activePanel === 'freeCoins' && <h3>Darmowe monety (tu pojawi się zawartość)</h3>}
+          {activePanel === 'freeCoins' && (
+          <div className="free-coins-section">
+            <h3>Darmowe monety</h3>
+            <p>Raz na 10 minut możesz odebrać darmowe 10 zł.</p>
+            <button onClick={handleClaimFreeCoins} disabled={cooldown > 0}>
+              {cooldown > 0 ? `Spróbuj za ${cooldown}s` : 'Odbierz 10 zł'}
+            </button>
+            <p>{freeCoinsMessage}</p>
+          </div>
+        )}
         </div>
       </div>
     </div>
