@@ -2,8 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { ControlPanel } from './ControlPanel';
 import { DragonGrid } from './DragonGrid';
 import './styles/dragonTower.css';
+import  {fetchUserBalance, subtractBalance, addBalance} from "../../../AnimatedCard.jsx";
 
 export function DragonTower() {
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    fetchUserBalance().then(balance => {
+      if (balance !== null) {
+        setBalance(balance);
+      }
+    }).catch(err => console.error("Failed to fetch balance:", err));
+  }, []);
   const [grid, setGrid] = useState([]);
   const [betAmount, setBetAmount] = useState(0);
   const [difficulty, setDifficulty] = useState('Easy');
@@ -90,14 +100,20 @@ const generateRow = (columns) => {
   
 
   const startGame = () => {
-    if (betAmount > 0) {
-      prepareNewBoard();
-      setGameStarted(true);
-      setProfit(0);
-      setMultiplier(1);
-    } else {
-      alert('Set your bet amount first!');
-    }
+    if (betAmount > 0 && betAmount <= balance) {
+  subtractBalance(betAmount).then(newBalance => {
+    setBalance(newBalance);
+    prepareNewBoard();
+    setGameStarted(true);
+    setProfit(0);
+    setMultiplier(1);
+    }).catch(err => {
+      console.error("Failed to subtract balance:", err);
+      alert("Bet failed – check your balance.");
+    });
+  } else {
+    alert('Invalid bet amount.');
+  }
   };
 
   const handleTileClick = (row, col) => {
@@ -131,9 +147,15 @@ const generateRow = (columns) => {
 
   const cashout = () => {
     if (profit > 0) {
-      revealBoard();
+      addBalance(profit).then(newBalance => {
+        setBalance(newBalance);
+        revealBoard();
+      }).catch(err => {
+        console.error("Failed to cash out:", err);
+        alert("Cashout failed.");
+      });
     }
-  };
+  }
 
   return (
     <div className="dragon-tower-wrapper">
@@ -148,6 +170,7 @@ const generateRow = (columns) => {
           multiplier={multiplier}
           cashout={cashout}
           gameStarted={gameStarted}
+          balance={balance}
         />
         <DragonGrid
           grid={grid}

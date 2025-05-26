@@ -52,7 +52,7 @@
 
 import React from 'react';
 
-export function ControlPanel({ betAmount, setBetAmount, difficulty, setDifficulty, startGame, profit, multiplier, cashout, gameStarted }) {
+export function ControlPanel({ betAmount, setBetAmount, difficulty, setDifficulty, startGame, profit, multiplier, cashout, gameStarted, balance }) {
   return (
     <div className="control-panel">
       <div className="panel-section">
@@ -108,6 +108,7 @@ export function ControlPanel({ betAmount, setBetAmount, difficulty, setDifficult
       )}
 
       <div className="panel-section">
+          <p>Balance: ${balance.toFixed(2)}</p>
         <p>Profit: {profit.toFixed(2)}</p>
         <p>Multiplier: {multiplier.toFixed(2)}x</p>
       </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import './AnimatedCard.css';
 import axios from 'axios';
-
 import tenOfClubs from './karty/10_of_clubs.png';
 import tenOfDiamonds from './karty/10_of_diamonds.png';
 import tenOfHearts from './karty/10_of_hearts.png';
@@ -73,7 +72,43 @@ const initialCardImages = [
   kingOfClubs, kingOfDiamonds, kingOfHearts, kingOfSpades,
   queenOfClubs, queenOfDiamonds, queenOfHearts, queenOfSpades
 ];
-
+export const fetchUserBalance = async () => {
+  try {
+    const res = await axios.get('http://localhost:8000/api/users/balance/', {
+      withCredentials: true
+    });
+    return res.data.balance;
+  } catch (err) {
+    console.error("Błąd podczas pobierania balansu:", err);
+    return null;
+  }
+};
+export const addBalance = async (amount) => {
+  try {
+    const res = await axios.post(
+      'http://localhost:8000/api/users/balance/',
+      { amount, action: 'add' },
+      { withCredentials: true }
+    );
+    return res.data.new_balance;
+  } catch (err) {
+    console.error("Błąd podczas dodawania balansu:", err);
+    throw err;
+  }
+};
+export const subtractBalance = async (amount) => {
+  try {
+    const res = await axios.post(
+      'http://localhost:8000/api/users/balance/',
+      { amount, action: 'subtract' },
+      { withCredentials: true }
+    );
+    return res.data.new_balance;
+  } catch (err) {
+    console.error("Błąd podczas odejmowania balansu:", err);
+    throw err;
+  }
+};
 const getCardValue = (cardImage) => {
   try {
     if (!cardImage) return 0;
@@ -115,11 +150,12 @@ const AnimatedCard = () => {
     const [user, setUser] = useState(null);
     const [balance, setBalance] = useState(0); // <- To jest setBalance
     useEffect(() => {
-    getCurrentUser().then(data => {
-      setUser(data);
-      setBalance(data.profile.balance); // <- Ustawiamy początkowy balans
-    });
-    }, []);
+     fetchUserBalance().then(balance => {
+    if (balance !== null) {
+      setBalance(balance);
+    }
+  });
+}, []);
   const [playerHand, setPlayerHand] = useState([]);
   const [betAmount, setBetAmount] = useState(0);
   const [dealerHand, setDealerHand] = useState([]);
@@ -431,26 +467,41 @@ const handleSplit = async () => {
       else if (result === 'DRAW') totalPayout = betAmount;
     }
 
-    try {
-      await axios.post('http://localhost:8000/api/games/results/', {
-        game: 1,
-        user: 1,
-        bet: betAmount,
-        payout: totalPayout,
-        result: results.join(', ')
-      });
-    } catch (err) {
-      console.error('Error saving result:', err);
-    }
+    // try {
+    //   await axios.post('http://localhost:8000/api/games/results/', {
+    //     game: 1,
+    //     user: 1,
+    //     bet: betAmount,
+    //     payout: totalPayout,
+    //     result: results.join(', ')
+    //   });
+    // } catch (err) {
+    //   console.error('Error saving result:', err);
+    // }
 
-    if (totalPayout > 0) {
-      setBalance(prev => prev + totalPayout);
+  //   if (totalPayout > 0) {
+  //     setBalance(prev => prev + totalPayout);
+  //   }
+  //
+  //   setGameStatus(results.includes('WIN') ? 'win' :
+  //                results.every(r => r === 'LOSE') ? 'lose' : 'draw');
+  //   setGamePhase('game-over');
+  // }, 300);
+    try {
+      if (totalPayout > betAmount) {
+        await addBalance(totalPayout - betAmount);
+      } else if (totalPayout < betAmount) {
+        await subtractBalance(betAmount - totalPayout);
+      }
+      // Jeśli równe – DRAW – brak zmian
+    } catch (error) {
+      console.error("Błąd przy aktualizacji balansu gracza:", error);
     }
 
     setGameStatus(results.includes('WIN') ? 'win' :
-                 results.every(r => r === 'LOSE') ? 'lose' : 'draw');
-    setGamePhase('game-over');
-  }, 300);
+        results.every(r => r === 'LOSE') ? 'lose' : 'draw');
+     setGamePhase('game-over');
+  }, 1000);
 };
 
   const handleNewGame = () => {
