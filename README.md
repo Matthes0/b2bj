@@ -5,6 +5,7 @@
 - pip install django-countries
 - pip install Pillow
 - pip install python-dotenv
+- pip install requests
 
 launching backend:
 - python manage.py runserver
