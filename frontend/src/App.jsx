@@ -103,7 +103,6 @@ import './index.css';
 import { Home } from './components/Home/Home';
 import { Header } from './components/Header/Header';
 import { Panel } from './components/Panel/Panel';
-import { NavigationPanel } from './components/NavigationPanel/NavigationPanel';
 import { Footer } from './components/Footer/Footer/Footer';
 import { Mines } from './components/Games/Mines/Mines';
 import { DragonTower } from './components/Games/DragonTower/DragonTower';
@@ -133,7 +132,6 @@ const App = () => {
         isPanelOpen={isPanelOpen}
         closePanel={closePanel}
       />
-      <NavigationPanel />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
