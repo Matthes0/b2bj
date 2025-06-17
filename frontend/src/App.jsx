@@ -103,29 +103,24 @@ import './index.css';
 import { Home } from './components/Home/Home';
 import { Header } from './components/Header/Header';
 import { Panel } from './components/Panel/Panel';
-import { NavigationPanel } from './components/NavigationPanel/NavigationPanel';
 import { Footer } from './components/Footer/Footer/Footer';
 import { Mines } from './components/Games/Mines/Mines';
 import { DragonTower } from './components/Games/DragonTower/DragonTower';
 import { Dice } from './components/Games/Dice/Dice';
 import { HiloGame } from './components/Games/Hilo/HiloGame';
-
+import { Regulamin } from './components/Pomoc/Regulamin';
+import { FAQ } from './components/Pomoc/FAQ';
+import { Kontakt } from './components/Pomoc/Kontakt';
+import { BlackjackRules } from './components/Zasady/BlackjackRules.jsx';
+import { HiLoRules } from './components/Zasady/HiloRules.jsx';
+import { MinesRules } from './components/Zasady/MinesRules.jsx';
 
 function App() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const togglePanel = () => setIsPanelOpen(prev => !prev);
   const closePanel = () => setIsPanelOpen(false);
-const App = () => {
 
-    const togglePanel = () => {
-        setIsPanelOpen(!isPanelOpen);
-    };
-
-    const closePanel = () => {
-        setIsPanelOpen(false);
-    };
-}
   return (
     <Router>
        <Header togglePanel={togglePanel} />
@@ -133,7 +128,6 @@ const App = () => {
         isPanelOpen={isPanelOpen}
         closePanel={closePanel}
       />
-      <NavigationPanel />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -146,6 +140,14 @@ const App = () => {
         <Route path="/dragontower" element={<RequireAuth> <DragonTower /> </RequireAuth>} />
         <Route path="/dice" element={<RequireAuth><Dice /></RequireAuth>} />
         <Route path="/hilo" element={<RequireAuth><HiloGame /></RequireAuth>} />
+        <Route path="/pomoc/regulamin" element={<Regulamin />} />
+        <Route path="/pomoc/faq" element={<FAQ />} />
+        <Route path="/pomoc/kontakt" element={<Kontakt />} />
+        <Route path="/zasady/blackjack" element={<BlackjackRules />} />
+        <Route path="/zasady/hilo" element={<HiLoRules />} />
+        <Route path="/zasady/mines" element={<MinesRules />} />
+
+
       </Routes>
       <Footer />
     </Router>

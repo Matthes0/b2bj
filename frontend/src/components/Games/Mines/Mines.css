@@ -104,6 +104,8 @@
     align-items: flex-start;
     padding: 40px;
     gap: 40px;
+    min-height: 500px;
+
   }
   
   .mines-board {

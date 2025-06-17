@@ -1,92 +1,105 @@
 .home-container {
-    padding: 2rem;
-  }
-  
-  .home-title {
-    font-size: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    color: #ffffff; 
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 3px #000;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 16px;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+.home-title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 1px 1px 3px #000;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.game-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  aspect-ratio: 2/3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.game-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  height: 100%;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.game-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #3b82f6;
+}
+
+.game-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.game-description {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: auto;
+  color: #a1a1aa;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
   }
-  
-  
-  .featured-game {
-    margin-bottom: 2rem;
+
+  .game-title {
+    font-size: 1.2rem;
   }
-  
-  .blackjack-link {
-    font-size: 1.5rem;
-    font-family: 'Courier New', Courier, monospace;
-    color: #ffcc00;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-  
-  .blackjack-link:hover {
-    color: #ffffff;
-    text-shadow: 0 0 5px #ffcc00;
-  }
-  
-  .game-list {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
-  .game-list li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .mines-link {
-    display: inline-block;
-    padding: 12px 20px;
-    margin-top: 10px;
-    background-color: #e74c3c;
-    color: white;
-    border-radius: 10px;
-    font-size: 18px;
-    text-decoration: none;
-    transition: background-color 0.2s;
-  }
-  
-  .mines-link:hover {
-    background-color: #c0392b;
-  }
-  
-  .featured-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #2980b9;
-    color: #f5f5f5;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  .featured-link:hover {
-    background-color: #3498db;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-    color: #ffffff;
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.5);
-  }
-  
-  
-  
-  
-  
+
   .game-icon {
-    font-size: 20px;
+    font-size: 2.5rem;
   }
-  
-  .game-text {
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+@media (max-width: 480px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
+
+  .home-container {
+    padding: 1rem;
+  }
+}

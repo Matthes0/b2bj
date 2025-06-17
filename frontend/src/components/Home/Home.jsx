@@ -15,38 +15,49 @@ export function Home() {
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Lista Gier z Django API</h1>
+      <h1 className="home-title">Nasze gry:</h1>
 
-          <div className="featured-game">
-      <Link to="/bj" className="featured-link">
-        <span className="game-icon">🎰</span> <span className="game-text">Zagraj w Blackjack</span>
-      </Link>
-    </div>
+      <div className="games-grid">
+        <div className="game-card">
+          <Link to="/bj" className="game-link">
+            <span className="game-icon">🎰</span>
+            <span className="game-title">Blackjack</span>
+            <span className="game-description">Klasyczna gra karciana</span>
+          </Link>
+        </div>
 
-    <div className="featured-game">
-      <Link to="/mines" className="featured-link">
-        <span className="game-icon">💣</span> <span className="game-text">Zagraj w Mines</span>
-      </Link>
-    </div>
+        <div className="game-card">
+          <Link to="/mines" className="game-link">
+            <span className="game-icon">💣</span>
+            <span className="game-title">Mines</span>
+            <span className="game-description">Uważaj na bomby!</span>
+          </Link>
+        </div>
 
-      <div className="featured-game">
-        <Link to="/dragontower" className="featured-link">
-          <span className="game-icon">🐉</span> <span className="game-text">Zagraj w Dragon Tower</span>
-        </Link>
+        <div className="game-card">
+          <Link to="/dragontower" className="game-link">
+            <span className="game-icon">🐉</span>
+            <span className="game-title">Dragon Tower</span>
+            <span className="game-description">Czy uda ci się dojść na szczyt?</span>
+          </Link>
+        </div>
+
+        <div className="game-card">
+          <Link to="/dice" className="game-link">
+            <span className="game-icon">🎲</span>
+            <span className="game-title">Dragon Dice</span>
+            <span className="game-description">Czy kostka okaże się szczęśliwa?</span>
+          </Link>
+        </div>
+
+        <div className="game-card">
+          <Link to="/hilo" className="game-link">
+            <span className="game-icon">🃏</span>
+            <span className="game-title">HiLo</span>
+            <span className="game-description">Więcej czy mniej?</span>
+          </Link>
+        </div>
       </div>
-
-          <div className="featured-game">
-        <Link to="/dice" className="featured-link">
-          <span className="game-icon">🎲</span> <span className="game-text">Zagraj w Dragon Dice</span>
-        </Link>
-      </div>
-
-      <div className="featured-game">
-        <Link to="/hilo" className="featured-link">
-          <span className="game-icon">🃏</span> <span className="game-text">Zagraj w HiLo</span>
-        </Link>
-      </div>
-
 
       <GameList games={games} />
     </div>

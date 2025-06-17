@@ -1,30 +1,9 @@
-// import React from 'react';
-// import "./Panel.css"
-
-
-
-// export function Panel({ isPanelOpen, closePanel }) {
-//   if (!isPanelOpen) return null;
-
-//   return (
-//     <div className="overlay" onClick={closePanel}>
-//       <div className="panel" onClick={function (e) { e.stopPropagation(); }}>
-//         <h2>Panel Content</h2>
-//         <button onClick={closePanel}>Close Panel</button>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 import React, {useEffect} from 'react';
 import './Panel.css';
-
 import { useState } from 'react';
 import creditCard from '../../assets//Panel/creditCard.png';
 import coinHand from '../../assets//Panel/coinHand.png';
 import coin from '../../assets/Panel/coin.png';
-
 import blikIcon from '../../assets/Panel/blik.png';
 import cardIcon from '../../assets/Panel/card.png';
 import paysafecardIcon from '../../assets/Panel/paysafecard.png';
@@ -34,10 +13,9 @@ export function Panel({ isPanelOpen, closePanel }) {
   const [activePanel, setActivePanel] = useState('deposit');
   const [activeDepositType, setActiveDepositType] = useState(null);
   const [blikAmount, setBlikAmount] = useState(10);
-const [freeCoinsMessage, setFreeCoinsMessage] = useState('');
-const [cooldown, setCooldown] = useState(0);
+  const [freeCoinsMessage, setFreeCoinsMessage] = useState('');
+  const [cooldown, setCooldown] = useState(0);
 
-  // Odliczanie co sekundę
   useEffect(() => {
     if (cooldown > 0) {
       const interval = setInterval(() => {
@@ -46,6 +24,12 @@ const [cooldown, setCooldown] = useState(0);
       return () => clearInterval(interval);
     }
   }, [cooldown]);
+
+  // Resetuj wybraną metodę płatności przy zmianie panelu
+  useEffect(() => {
+    setActiveDepositType(null);
+  }, [activePanel]);
+
   if (!isPanelOpen) return null;
 
   const handleClaimFreeCoins = async () => {
@@ -66,6 +50,7 @@ const [cooldown, setCooldown] = useState(0);
       setFreeCoinsMessage('Wystąpił błąd podczas odbierania monet.');
     }
   };
+
   return (
     <div className="overlay" onClick={closePanel}>
       <div className="wallet-popup" onClick={(e) => e.stopPropagation()}>
@@ -85,58 +70,69 @@ const [cooldown, setCooldown] = useState(0);
         </div>
         <div className="right-panel">
           {activePanel === 'deposit' && (
-            <div className="deposit-options">
-              <button onClick={() => setActiveDepositType('blik')}>
-                Blik
-                <img src={blikIcon} alt="Blik" />
-              </button>
-              <button onClick={() => setActiveDepositType('card')}>
-                Karta
-                <img src={cardIcon} alt="Karta" />
-              </button>
-              <button onClick={() => setActiveDepositType('paysafecard')}>
-                Paysafecard
-                <img src={paysafecardIcon} alt="Paysafecard" />
-              </button>
-            </div>
-          )}
-          <div className="deposit-details">
-            {activeDepositType === 'blik' && (
-  <div className="blik-section">
-    <h3>Doładuj przez Blik</h3>
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-      try {
-        const response = await axios.post(
-          'http://localhost:8000/api/payments/top-up/',
-          { amount: blikAmount * 100 },
-          { withCredentials: true }
-        );
+            <>
+              <div className="deposit-options">
+                <button onClick={() => setActiveDepositType('blik')}>
+                  Blik
+                  <img src={blikIcon} alt="Blik" />
+                </button>
+                <button onClick={() => setActiveDepositType('card')}>
+                  Karta
+                  <img src={cardIcon} alt="Karta" />
+                </button>
+                <button onClick={() => setActiveDepositType('paysafecard')}>
+                  Paysafecard
+                  <img src={paysafecardIcon} alt="Paysafecard" />
+                </button>
+              </div>
 
-        if (response.data.redirect_url) {
-          window.location.href = response.data.redirect_url;
-        }
-      } catch (error) {
-        console.error('Błąd:', error.response?.data || error.message);
-      }
-      }}
-    >
-      <label>Kwota doładowania (zł)</label>
-      <input
-        type="number"
-        min="1"
-        step="0.01"
-        value={blikAmount}
-        onChange={(e) => setBlikAmount(parseFloat(e.target.value))}
-      />
-      <button type="submit">Zapłać Blikiem</button>
-    </form>
-  </div>
-)}
-            {activeDepositType === 'card' && <div>Karta (tu pojawi się zawartość)</div>}
-            {activeDepositType === 'paysafecard' && <div>Paysafecard (tu pojawi się zawartość)</div>}
-          </div>
+              {activeDepositType === 'blik' && (
+                <div className="deposit-details">
+                  <div className="blik-section">
+                    <h3>Doładuj przez Blik</h3>
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        try {
+                          const response = await axios.post(
+                            'http://localhost:8000/api/payments/top-up/',
+                            { amount: blikAmount * 100 },
+                            { withCredentials: true }
+                          );
+                          if (response.data.redirect_url) {
+                            window.location.href = response.data.redirect_url;
+                          }
+                        } catch (error) {
+                          console.error('Błąd:', error.response?.data || error.message);
+                        }
+                      }}
+                    >
+                      <label>Kwota doładowania (zł)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="0.01"
+                        value={blikAmount}
+                        onChange={(e) => setBlikAmount(parseFloat(e.target.value))}
+                      />
+                      <button type="submit">Zapłać Blikiem</button>
+                    </form>
+                  </div>
+                </div>
+              )}
+              {activeDepositType === 'card' && (
+                <div className="deposit-details">
+                  <div>Karta (tu pojawi się zawartość)</div>
+                </div>
+              )}
+              {activeDepositType === 'paysafecard' && (
+                <div className="deposit-details">
+                  <div>Paysafecard (tu pojawi się zawartość)</div>
+                </div>
+              )}
+            </>
+          )}
+
           {activePanel === 'withdraw' && (
             <div className="withdraw-section">
               <h3>Wypłata na rachunek bankowy</h3>
@@ -153,16 +149,17 @@ const [cooldown, setCooldown] = useState(0);
               </div>
             </div>
           )}
+
           {activePanel === 'freeCoins' && (
-          <div className="free-coins-section">
-            <h3>Darmowe monety</h3>
-            <p>Raz na 10 minut możesz odebrać darmowe 10 zł.</p>
-            <button onClick={handleClaimFreeCoins} disabled={cooldown > 0}>
-              {cooldown > 0 ? `Spróbuj za ${cooldown}s` : 'Odbierz 10 zł'}
-            </button>
-            <p>{freeCoinsMessage}</p>
-          </div>
-        )}
+            <div className="free-coins-section">
+              <h3>Darmowe monety</h3>
+              <p>Raz na 10 minut możesz odebrać darmowe 10 zł.</p>
+              <button onClick={handleClaimFreeCoins} disabled={cooldown > 0}>
+                {cooldown > 0 ? `Spróbuj za ${cooldown}s` : 'Odbierz 10 zł'}
+              </button>
+              <p>{freeCoinsMessage}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
