@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 export function HelpSection() {
   return (
     <div className="footer-column">
-      <h3>Help</h3>
+      <h3>Pomoc</h3>
       <ul>
-        <li><Link to="/help1">Help 1</Link></li>
-        <li><Link to="/help2">Help 2</Link></li>
-        <li><Link to="/help3">Help 3</Link></li>
+        <li><Link to="/pomoc/regulamin">Regulamin</Link></li>
+        <li><Link to="/pomoc/faq">FAQ</Link></li>
+        <li><Link to="/pomoc/kontakt">Kontakt</Link></li>
       </ul>
     </div>
   );
 }
-
-

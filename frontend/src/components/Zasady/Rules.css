@@ -1,0 +1,18 @@
+.rules-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1a2a3a;
+  border-radius: 10px;
+  color: white;
+  height: 500px;
+}
+
+.rules-content {
+  margin-top: 2rem;
+  line-height: 1.6;
+}
+
+.rules-content ol {
+  padding-left: 1.5rem;
+}

@@ -1,0 +1,23 @@
+.help-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1a2a3a;
+  border-radius: 10px;
+  color: white;
+  height: 500px;
+}
+
+.help-content {
+  margin-top: 2rem;
+  line-height: 1.6;
+}
+
+.help-content h2, .help-content h3 {
+  color: #a1c4ff;
+  margin-top: 1.5rem;
+}
+
+.help-content ol, .help-content ul {
+  padding-left: 1.5rem;
+}
