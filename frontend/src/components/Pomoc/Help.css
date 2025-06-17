@@ -81,33 +81,39 @@
   gap: 2rem;
 }
 
+/* Zmodyfikowane style dla danych kontaktowych */
 .contact-info {
   background: rgba(41, 62, 84, 0.5);
   padding: 1.5rem;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Wyśrodkowanie w poziomie */
+  text-align: center; /* Wyśrodkowanie tekstu */
 }
 
 .info-item {
   display: flex;
+  flex-direction: column; /* Elementy ułożone pionowo */
+  align-items: center; /* Wyśrodkowanie w poziomie */
   margin-bottom: 1.5rem;
-}
-
-.info-item .icon {
-  font-size: 1.5rem;
-  margin-right: 1rem;
-  color: #a1c4ff;
+  width: 100%; /* Pełna szerokość kontenera */
 }
 
 .info-item h3 {
   color: #a1c4ff;
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
+  text-align: center; /* Wyśrodkowanie nagłówków */
 }
 
 .info-item p {
   margin: 0.2rem 0;
   color: #e0e0e0;
+  text-align: center; /* Wyśrodkowanie tekstu */
 }
+
+/* Pozostałe style pozostają bez zmian */
 
 .contact-form {
   background: rgba(41, 62, 84, 0.5);

@@ -4,15 +4,225 @@
   padding: 2rem;
   background: #1a2a3a;
   border-radius: 10px;
-  color: white;
-  height: 500px;
+  color: #f0f0f0;
+  min-height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.rules-page h1 {
+  color: #a1c4ff;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .rules-content {
-  margin-top: 2rem;
-  line-height: 1.6;
+  margin-top: 1.5rem;
+  line-height: 1.7;
 }
 
-.rules-content ol {
-  padding-left: 1.5rem;
+.rules-section {
+  margin-bottom: 2.5rem;
+}
+
+.rules-section h2 {
+  color: #89b4ff;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2d3e50;
+}
+
+.rules-content ol, .rules-content ul {
+  padding-left: 1.8rem;
+  margin: 1rem 0;
+}
+
+.rules-content li {
+  margin-bottom: 0.8rem;
+}
+
+.rules-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.rule-card {
+  background: rgba(41, 62, 84, 0.5);
+  padding: 1.2rem;
+  border-radius: 8px;
+  border-left: 3px solid #4a6ea9;
+}
+
+.rule-card h3 {
+  color: #a1c4ff;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.payout-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.payout-table th, .payout-table td {
+  padding: 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #2d3e50;
+}
+
+.payout-table th {
+  background-color: #2d3e50;
+  color: #a1c4ff;
+}
+
+.payout-table tr:hover {
+  background-color: rgba(41, 62, 84, 0.3);
+}
+
+.rules-note {
+  background: rgba(161, 196, 255, 0.1);
+  padding: 1rem;
+  border-left: 3px solid #a1c4ff;
+  border-radius: 0 4px 4px 0;
+  margin-top: 2rem;
+}
+
+/* Scrollbar */
+.rules-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rules-page::-webkit-scrollbar-track {
+  background: #2d3e50;
+  border-radius: 10px;
+}
+
+.rules-page::-webkit-scrollbar-thumb {
+  background: #4a6ea9;
+  border-radius: 10px;
+}
+
+.rules-page::-webkit-scrollbar-thumb:hover {
+  background: #5d8ae6;
+}
+
+/* Responsywność */
+@media (max-width: 600px) {
+  .rules-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rules-page {
+    padding: 1.5rem;
+  }
+}
+/* Wszystkie style z poprzedniego przykładu Blackjacka są tutaj reużywalne */
+/* Dodatkowe specyficzne style dla Hi-Lo można dodać poniżej */
+
+.hi-lo-example {
+  background: rgba(41, 62, 84, 0.5);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.hi-lo-example-cards {
+  display: flex;
+  margin-right: 1.5rem;
+}
+
+.hi-lo-example-cards img {
+  width: 60px;
+  margin-right: -20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.hi-lo-example-text {
+  flex-grow: 1;
+}
+
+@media (max-width: 600px) {
+  .hi-lo-example {
+    flex-direction: column;
+  }
+
+  .hi-lo-example-cards {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
+/* Mines-specific styles */
+.mines-example {
+  background: rgba(41, 62, 84, 0.5);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.mines-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-right: 2rem;
+}
+
+.mines-cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2d3e50;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mines-cell:hover {
+  transform: scale(1.1);
+}
+
+.mine {
+  color: #ff4d4d;
+}
+
+.diamond {
+  color: #4dff4d;
+}
+
+.mines-example-text {
+  flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+  .mines-example {
+    flex-direction: column;
+  }
+
+  .mines-grid {
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mines-cell {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
 }

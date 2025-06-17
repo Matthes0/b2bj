@@ -40,7 +40,7 @@ export function Kontakt() {
           <div className="contact-info">
             <h2>Dane kontaktowe</h2>
             <div className="info-item">
-              <i className="icon">✉️</i>
+
               <div>
                 <h3>Email</h3>
                 <p>kontakt@blik2blackjack.com</p>
@@ -49,7 +49,7 @@ export function Kontakt() {
             </div>
 
             <div className="info-item">
-              <i className="icon">📞</i>
+
               <div>
                 <h3>Telefon</h3>
                 <p>+48 123 456 789 (obsługa klienta)</p>
@@ -58,7 +58,7 @@ export function Kontakt() {
             </div>
 
             <div className="info-item">
-              <i className="icon">🕒</i>
+
               <div>
                 <h3>Godziny pracy</h3>
                 <p>Pon-Pt: 9:00-17:00</p>
@@ -67,7 +67,6 @@ export function Kontakt() {
             </div>
 
             <div className="info-item">
-              <i className="icon">📍</i>
               <div>
                 <h3>Adres</h3>
                 <p>Blik2Blackjack Sp. z o.o.</p>
