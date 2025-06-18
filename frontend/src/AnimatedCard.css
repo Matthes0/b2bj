@@ -1,7 +1,7 @@
 .game-container {
   display: flex;
   width: 80%;
-  margin: 80px auto 0;
+  margin:40px auto 0;
   position: relative;
   height: 600px;
 }

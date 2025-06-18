@@ -65,7 +65,6 @@ export function Dice() {
       return;
     }
 
-    // Odejmij środki przed rozpoczęciem gry
     const success = await updateBalance(betAmount, 'subtract');
     if (!success) return;
 
@@ -84,7 +83,7 @@ export function Dice() {
       isWin: win
     };
 
-    setHistory([newEntry, ...history.slice(0, 9)]); // max 10 ostatnich
+    setHistory([newEntry, ...history.slice(0, 7)]);
   };
 
   const calculatePayout = () => {
@@ -97,11 +96,12 @@ export function Dice() {
       <div className="panel-zaklad">
         <h3>Saldo: {isLoading ? 'Ładowanie...' : balance.toFixed(2)}</h3>
         <div className="bet-controls">
-          <inputs
-            type="number"
-            value={betAmount}
-            onChange={(e) => setBetAmount(parseFloat(e.target.value) || 1)}
-            min="1"
+          <input
+              type="number"
+              value={betAmount}
+              onChange={(e) => setBetAmount(parseFloat(e.target.value) || 1)}
+              min="1"
+              className="bet-input"
           />
           <div className="bet-multipliers">
             <button onClick={() => multiplyBet(0.5)} className="multiplier-btn">1/2</button>
@@ -114,68 +114,68 @@ export function Dice() {
       </div>
 
       <div className="controls-panel">
-        <div className="history-panel">
-          <h4>Ostatnie wyniki</h4>
-          <div className="history-items">
-            {history.map((entry, index) => (
-              <div
-                key={index}
-                className={`history-item ${entry.isWin ? 'win' : 'lose'}`}
-              >
-                {entry.result}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="slider-container">
-          <input
-            type="range"
-            min="1"
-            max="99"
-            step="1"
-            value={sliderValue}
-            onChange={handleSliderChange}
-            className={`slider ${isAbove ? 'above' : 'below'}`}
-            style={{ '--value': sliderValue }}
-          />
-          <div className="slider-value" style={{ color: sliderValue === generatedValue ? 'green' : 'gray' }}>
-            {sliderValue}
-          </div>
+        <div className="game-display">
           {generatedValue !== null && (
-            <div
-              className="generated-point"
-              style={{ left: `${generatedValue}%` }}
-            ></div>
+              <div className="result-display">
+                <h2>Wylosowano: {generatedValue}</h2>
+                <h2 className={`result-message ${gameStatus}`}>
+                  {gameStatus === 'win' ? 'Wygrałeś!' : 'Przegrałeś!'}
+                </h2>
+              </div>
           )}
-        </div>
 
-        <button className="mode-toggle" onClick={() => setIsAbove(!isAbove)}>
-          Tryb: {isAbove ? 'Powyżej' : 'Poniżej'}
-        </button>
-
-        <div className="info-bar">
-          <div className="info-item">
-            <strong>Wygrana:</strong> x{calculatePayout()}
-          </div>
-          <div className="info-item">
-            <strong>{isAbove ? 'Powyżej' : 'Poniżej'}:</strong> {sliderValue}
-          </div>
-          <div className="info-item">
-            <strong>Szanse:</strong> {isAbove ? (100 - sliderValue) : sliderValue}%
-          </div>
-        </div>
-
-        {generatedValue !== null && (
-          <div className="result-panel">
-            <div className="result-box">
-              <h2>Wylosowano: {generatedValue}</h2>
-              <h2 className={`result-message ${gameStatus}`}>
-                {gameStatus === 'win' ? 'Wygrałeś!' : 'Przegrałeś!'}
-              </h2>
+          <div className="history-panel">
+            <h4>Ostatnie wyniki</h4>
+            <div className="history-items">
+              {history.map((entry, index) => (
+                <div
+                  key={index}
+                  className={`history-item ${entry.isWin ? 'win' : 'lose'}`}
+                >
+                  {entry.result}
+                </div>
+              ))}
             </div>
           </div>
-        )}
+
+          <div className="slider-container">
+            <input
+              type="range"
+              min="1"
+              max="99"
+              step="1"
+              value={sliderValue}
+              onChange={handleSliderChange}
+              className={`slider ${isAbove ? 'above' : 'below'}`}
+              style={{ '--value': sliderValue }}
+            />
+            <div className="slider-value" style={{ color: sliderValue === generatedValue ? 'green' : 'gray' }}>
+              {sliderValue}
+            </div>
+            {generatedValue !== null && (
+              <div
+                className="generated-point"
+                style={{ left: `${generatedValue}%` }}
+              ></div>
+            )}
+          </div>
+
+          <button className="mode-toggle" onClick={() => setIsAbove(!isAbove)}>
+            Tryb: {isAbove ? 'Powyżej' : 'Poniżej'}
+          </button>
+
+          <div className="info-bar">
+            <div className="info-item">
+              <strong>Wygrana:</strong> x{calculatePayout()}
+            </div>
+            <div className="info-item">
+              <strong>{isAbove ? 'Powyżej' : 'Poniżej'}:</strong> {sliderValue}
+            </div>
+            <div className="info-item">
+              <strong>Szanse:</strong> {isAbove ? (100 - sliderValue) : sliderValue}%
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

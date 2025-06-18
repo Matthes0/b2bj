@@ -4,9 +4,6 @@ import { useState } from 'react';
 import creditCard from '../../assets//Panel/creditCard.png';
 import coinHand from '../../assets//Panel/coinHand.png';
 import coin from '../../assets/Panel/coin.png';
-import blikIcon from '../../assets/Panel/blik.png';
-import cardIcon from '../../assets/Panel/card.png';
-import paysafecardIcon from '../../assets/Panel/paysafecard.png';
 import axios from 'axios';
 
 export function Panel({ isPanelOpen, closePanel }) {
@@ -15,6 +12,9 @@ export function Panel({ isPanelOpen, closePanel }) {
   const [blikAmount, setBlikAmount] = useState(10);
   const [freeCoinsMessage, setFreeCoinsMessage] = useState('');
   const [cooldown, setCooldown] = useState(0);
+  const [cardAmount, setCardAmount] = useState(10);
+  const [paysafeAmount, setPaysafeAmount] = useState(10);
+  const [paysafePin, setPaysafePin] = useState('');
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -25,7 +25,6 @@ export function Panel({ isPanelOpen, closePanel }) {
     }
   }, [cooldown]);
 
-  // Resetuj wybraną metodę płatności przy zmianie panelu
   useEffect(() => {
     setActiveDepositType(null);
   }, [activePanel]);
@@ -73,40 +72,37 @@ export function Panel({ isPanelOpen, closePanel }) {
             <>
               <div className="deposit-options">
                 <button onClick={() => setActiveDepositType('blik')}>
-                  Blik
-                  <img src={blikIcon} alt="Blik" />
+                  BLIK
                 </button>
                 <button onClick={() => setActiveDepositType('card')}>
-                  Karta
-                  <img src={cardIcon} alt="Karta" />
+                  KARTA PŁATNICZA
                 </button>
                 <button onClick={() => setActiveDepositType('paysafecard')}>
-                  Paysafecard
-                  <img src={paysafecardIcon} alt="Paysafecard" />
+                  PAYSAFECARD
                 </button>
               </div>
 
               {activeDepositType === 'blik' && (
-                <div className="deposit-details">
-                  <div className="blik-section">
-                    <h3>Doładuj przez Blik</h3>
-                    <form
-                      onSubmit={async (e) => {
-                        e.preventDefault();
-                        try {
-                          const response = await axios.post(
-                            'http://localhost:8000/api/payments/top-up/',
-                            { amount: blikAmount * 100 },
-                            { withCredentials: true }
-                          );
-                          if (response.data.redirect_url) {
-                            window.location.href = response.data.redirect_url;
-                          }
-                        } catch (error) {
-                          console.error('Błąd:', error.response?.data || error.message);
+                <div className="deposit-details blik-section">
+                  <h3>Doładuj przez Blik</h3>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      try {
+                        const response = await axios.post(
+                          'http://localhost:8000/api/payments/top-up/',
+                          { amount: blikAmount * 100 },
+                          { withCredentials: true }
+                        );
+                        if (response.data.redirect_url) {
+                          window.location.href = response.data.redirect_url;
                         }
-                      }}
-                    >
+                      } catch (error) {
+                        console.error('Błąd:', error.response?.data || error.message);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
                       <label>Kwota doładowania (zł)</label>
                       <input
                         type="number"
@@ -115,19 +111,142 @@ export function Panel({ isPanelOpen, closePanel }) {
                         value={blikAmount}
                         onChange={(e) => setBlikAmount(parseFloat(e.target.value))}
                       />
-                      <button type="submit">Zapłać Blikiem</button>
-                    </form>
-                  </div>
+                    </div>
+                    <button type="submit" className="submit-button">Zapłać Blikiem</button>
+                  </form>
                 </div>
               )}
+
               {activeDepositType === 'card' && (
-                <div className="deposit-details">
-                  <div>Karta (tu pojawi się zawartość)</div>
+                <div className="deposit-details card-section">
+                  <h3>Doładuj przez kartę płatniczą</h3>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      try {
+                        const response = await axios.post(
+                          'http://localhost:8000/api/payments/top-up/',
+                          {
+                            amount: cardAmount * 100,
+                            payment_method: 'card'
+                          },
+                          { withCredentials: true }
+                        );
+                        if (response.data.redirect_url) {
+                          window.location.href = response.data.redirect_url;
+                        }
+                      } catch (error) {
+                        console.error('Błąd:', error.response?.data || error.message);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Kwota doładowania (zł)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="0.01"
+                        value={cardAmount}
+                        onChange={(e) => setCardAmount(parseFloat(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="card-inputs">
+                      <div className="form-group">
+                        <label>Numer karty</label>
+                        <input
+                          type="text"
+                          placeholder="1234 5678 9012 3456"
+                          pattern="[0-9\s]{16,19}"
+                          required
+                        />
+                      </div>
+
+                      <div className="card-details">
+                        <div className="form-group">
+                          <label>Data ważności</label>
+                          <input
+                            type="text"
+                            placeholder="MM/RR"
+                            pattern="\d{2}/\d{2}"
+                            required
+                          />
+                        </div>
+
+                        <div className="form-group">
+                          <label>CVV</label>
+                          <input
+                            type="text"
+                            placeholder="123"
+                            pattern="\d{3}"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label>Imię i nazwisko na karcie</label>
+                        <input
+                          type="text"
+                          placeholder="JAN KOWALSKI"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="submit-button">Zapłać kartą</button>
+                  </form>
                 </div>
               )}
+
               {activeDepositType === 'paysafecard' && (
-                <div className="deposit-details">
-                  <div>Paysafecard (tu pojawi się zawartość)</div>
+                <div className="deposit-details paysafe-section">
+                  <h3>Doładuj przez Paysafecard</h3>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      try {
+                        const response = await axios.post(
+                          'http://localhost:8000/api/payments/top-up/',
+                          {
+                            amount: paysafeAmount * 100,
+                            payment_method: 'paysafecard',
+                            pin: paysafePin
+                          },
+                          { withCredentials: true }
+                        );
+                        if (response.data.success) {
+                          alert('Płatność zakończona sukcesem!');
+                        }
+                      } catch (error) {
+                        console.error('Błąd:', error.response?.data || error.message);
+                      }
+                    }}
+                  >
+                    <div className="form-group">
+                      <label>Kwota doładowania (zł)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="0.01"
+                        value={paysafeAmount}
+                        onChange={(e) => setPaysafeAmount(parseFloat(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Kod PIN Paysafecard</label>
+                      <input
+                        type="text"
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                        value={paysafePin}
+                        onChange={(e) => setPaysafePin(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <button type="submit" className="submit-button">Zapłać Paysafecard</button>
+                  </form>
                 </div>
               )}
             </>
@@ -136,7 +255,7 @@ export function Panel({ isPanelOpen, closePanel }) {
           {activePanel === 'withdraw' && (
             <div className="withdraw-section">
               <h3>Wypłata na rachunek bankowy</h3>
-              <p>Wybierz numer rachunku do wypłaty z listy poniżej i wpisz kwotę wypłaty</p>
+              <p>Wpisz numer rachunku do wypłaty i podaj kwotę wypłaty</p>
               <div className="account-selection">
                 <label>Nr konta</label>
                 <input type="text" placeholder="Wpisz numer konta" />
@@ -145,7 +264,7 @@ export function Panel({ isPanelOpen, closePanel }) {
                 <label>Kwota w zł</label>
                 <input type="number" />
                 <br />
-                <button>Wypłata</button>
+                <button type="submit" className="submit-button">Wypłata</button>
               </div>
             </div>
           )}
@@ -154,10 +273,14 @@ export function Panel({ isPanelOpen, closePanel }) {
             <div className="free-coins-section">
               <h3>Darmowe monety</h3>
               <p>Raz na 10 minut możesz odebrać darmowe 10 zł.</p>
-              <button onClick={handleClaimFreeCoins} disabled={cooldown > 0}>
+              <button
+                onClick={handleClaimFreeCoins}
+                disabled={cooldown > 0}
+                className="submit-button"
+              >
                 {cooldown > 0 ? `Spróbuj za ${cooldown}s` : 'Odbierz 10 zł'}
               </button>
-              <p>{freeCoinsMessage}</p>
+              <p className="message">{freeCoinsMessage}</p>
             </div>
           )}
         </div>
