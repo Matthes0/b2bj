@@ -1,3 +1,17 @@
+Projekt zespołowy umcs 
+
+Cechy projektu:
+
+- 5 gier losowych, w których można obstawiać walutę
+- obsługa autentyfikacji i autoryzacji użytkowników
+- podział projektu na backend i frontend 
+- obsługa płatności payU (częściowa)
+
+
+backend: 
+
+Serwer napisany w Django.
+Wymagane zależności:
 - pip install django
 - pip install django-extensions
 - pip install djangorestframework
@@ -7,9 +21,21 @@
 - pip install python-dotenv
 - pip install requests
 
-launching backend:
+Konieczne jest też stworzenie pliku .env w folderze backend z podanymi parametrami (z poprawnymi danymi zamiast XXX):
+- PAYU_POS_ID=XXX
+- PAYU_CLIENT_ID=XXX
+- PAYU_CLIENT_SECRET=XXX
+- PAYU_SECOND_KEY=XXX
+
+launching:
 - python manage.py runserver
 
-launching frontend:
+frontend:
+
+Aplikacja napisana w bibliotece React.
+Wymagane zależności:
+- node.js
+
+launching:
 - npm install
 - npm run dev
