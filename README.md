@@ -5,6 +5,7 @@ Członkowie:
 - Krzysztof Chęć (KrzysztofChec)
 - Piotr Sidorowicz (Hajter74/Hajter72)
 - Jakub Woźniak (Woznq)
+- 
 Cechy projektu:
 
 - 5 gier losowych, w których można obstawiać walutę
